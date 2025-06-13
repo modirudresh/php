@@ -1,0 +1,85 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background: #f0f0f0;
+}
+
+img {
+  width: 60px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+a.action-btn {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+}
+.view-btn{
+  background: #007bff;
+}
+
+.edit-btn {
+  background: #22911e;
+}
+
+.delete-btn {
+  background: #dc3545;
+}
+
+.gender-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.gender-male {
+  background: #17a2b8;
+}
+
+.gender-female {
+  background: #e83e8c;
+}
+
+.gender-other {
+  background: #6c757d;
+}
+
+.modal .card {
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+#viewUserHobbies .badge {
+  font-size: 0.85rem;
+  padding: 0.4em 0.6em;
+}
+
+
+
+
