@@ -1,0 +1,20 @@
+echo "# PHP_Training" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/modirudresh/PHP_Training.git
+git push -u origin main
+
+
+
+git branch feature/php_intro                          or    git checkout -b feature/php_intro
+git checkout feature/php_intro
+git add Task_PHP/
+git commit -m "Introduction of PHP Completed"
+git checkout main
+git merge feature/php_intro
+git push
+
+git branch
+

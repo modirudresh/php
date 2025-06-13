@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add a new user | Admin Panel</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" href="Logo.png" type="image/icon">
+        <style>
+            /* Sidebar */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100vh;
+                background-color: #343a40;
+                color: white;
+                padding: 20px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+
+            .sidebar h2 {
+                margin-bottom: 20px;
+                font-size: 1.5rem;
+                border-bottom: 1px solid #555;
+                padding-bottom: 10px;
+            }
+
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .sidebar ul li {
+                margin: 15px 0;
+            }
+
+            .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                font-size: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .sidebar ul li a:hover {
+                color: #ffc107;
+            }
+
+            /* Push form to the right */
+            form {
+                margin-left: 280px;
+                /* 260px + some gap */
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                width: calc(100% - 300px);
+                max-width: 1000px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Sidebar Dropdown Styles */
+            .dropdown {
+                position: relative;
+            }
+
+            .dropdown-menu {
+                display: none;
+                flex-direction: column;
+                padding-left: 20px;
+                margin-top: 10px;
+            }
+
+            .dropdown-menu li {
+                margin: 5px 0;
+            }
+
+            .dropdown-menu li a {
+                font-size: 0.95rem;
+            }
+
+            .dropdown.active>.dropdown-menu {
+                display: flex;
+            }
+
+            .dropdown-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="sidebar">
+            <h2>Admin Panel</h2>
+            <ul>
+                <li><a href="#"><i class="fas fa-user-plus"></i> Add User</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="fas fa-users"></i> Manage Users <i class="fas fa-caret-down"
+                            style="margin-left:auto;"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">All Users</a></li>
+                        <li><a href="#">Active Users</a></li>
+                        <li><a href="#">Blocked Users</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+
+        <script>
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const parent = this.closest('.dropdown');
+                    parent.classList.toggle('active');
+                });
+            });
+        </script>
+
+
+    </body>
+
+</html>
