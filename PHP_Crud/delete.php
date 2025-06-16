@@ -11,14 +11,14 @@ $status = '';
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
-    $stmt = $con->prepare("SELECT image_path FROM user WHERE id = ?");
+    $stmt = $con->prepare("SELECT image_path FROM users WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $stmt->bind_result($imagePath);
     $stmt->fetch();
     $stmt->close();
 
-    $stmt = $con->prepare("DELETE FROM user WHERE id = ?");
+    $stmt = $con->prepare("DELETE FROM users WHERE id = ?");
     $stmt->bind_param("i", $id);
   
     if ($stmt->execute()) {

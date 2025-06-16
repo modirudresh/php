@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require("config.php");
 
-$result = mysqli_query($con, "SELECT * FROM user");
+$result = mysqli_query($con, "SELECT * FROM users");
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +28,7 @@ $result = mysqli_query($con, "SELECT * FROM user");
     <thead>
       <tr>
         <th>#</th>
-        <th>Full Name
+        <th style="width: 160px;">Full Name
 			<p style="font-size:10px; font:normal;">(First + Last) Name</p>
 		</th>
         <th>Email</th>
@@ -38,8 +38,8 @@ $result = mysqli_query($con, "SELECT * FROM user");
         <th>Date of Birth</th>
         <th>Phone No.</th>
         <th>Gender</th>
-        <th>Hobby</th>
-        <th>Actions</th>
+        <th style="width: 120px;">Hobby</th>
+        <th style="width: 160px;">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -50,12 +50,12 @@ $result = mysqli_query($con, "SELECT * FROM user");
           <td style="width:100px;"><?= htmlspecialchars($res['email']) ?></td>
           <td>
             <?php if (!empty($res['image_path'])): ?>
-              <img src="<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" />
+              <img src="<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:50px; height:50px; object-fit:cover; border-radius:12px;" />
             <?php else: ?>
-              <span>No Image</span>
+              <img src="./uploads/default.png" alt="No image" style="width:50px; height:50px; object-fit:cover; border-radius:12px;" />
             <?php endif; ?>
           </td>
-          <td style="max-width:140px;"><?= nl2br(htmlspecialchars($res['address'])) ?></td>
+            <td style="max-width:140px;">            <?= nl2br(htmlspecialchars(substr($res['address'], 0, 20))) ?>....            </td>
 <td style="width:80px;"><?= htmlspecialchars(strtoupper($res['country'])) ?></td>
 
           <td style="width:180px;"><?= htmlspecialchars($res['DOB']) ?></td>
@@ -101,7 +101,7 @@ $result = mysqli_query($con, "SELECT * FROM user");
     data-address="<?= htmlspecialchars($res['address']) ?>"
     data-gender="<?= htmlspecialchars($res['gender']) ?>"
     data-hobbies="<?= htmlspecialchars($res['hobby']) ?>"
-    data-image="<?= htmlspecialchars(!empty($res['image_path']) ? $res['image_path'] : 'https://via.placeholder.com/100') ?>"
+    data-image="<?= htmlspecialchars(!empty($res['image_path']) ? $res['image_path'] : './uploads/default.png') ?>"
   >
     <i class="fas fa-eye"></i>
   </button>
@@ -154,7 +154,7 @@ $result = mysqli_query($con, "SELECT * FROM user");
     <div class="card-body">
       <div class="row">
         <div class="col-md-6 text-center border-end">
-          <img id="viewUserImage" src="" alt="Profile" class="rounded-circle mb-3" style="height:120px; width:120px; object-fit:cover; border:2px solid #ccc;">
+          <img id="viewUserImage" src="" alt="Profile" class="rounded-lg mb-3" style="height:120px; width:120px; object-fit:cover; border:2px solid #ccc;">
           <h4 id="viewUserName" class="mb-2"></h4>
           <p id="viewUserDOB" class="mb-0 text-muted"><i class="fas fa-calendar-alt me-1"></i> <span id="dobText"></span></p>
         </div>

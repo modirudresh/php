@@ -24,7 +24,7 @@
 <div class="form-row">
   <div>
     <label for="password">Password <span style="color:red;">*</span></label>
-    <input type="password" id="password" name="password" autocomplete="new-password" placeholder="*******" required />
+    <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" placeholder="*******" required />
   </div>
 
 

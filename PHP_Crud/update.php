@@ -9,19 +9,39 @@
 </head>
 <body>
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include("sidebar.html");
 require("config.php");
-if (!isset($_GET['id'])) {
+
+if (!isset($con) || !($con instanceof mysqli)) {
+  die("<p>Database connection not established. Please check config.php.</p>");
+}
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
   header("Location: index.php");
   exit();
 }
+
 $id = (int) $_GET['id'];
-$result = mysqli_query($con, "SELECT * FROM user WHERE id = $id");
-$user = mysqli_fetch_assoc($result);
-$hobbies = explode(',', $user['hobby']);
+
+$stmt = $con->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+if (!$user) {
+  echo "<p>User not found.</p>";
+  exit();
+}
+
+$hobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
 ?>
-<form action="./actions/updateAction.php" method="post" name="Update" enctype="multipart/form-data">
-  <input type="hidden" name="id" value="<?= $user['id'] ?>">
+<form action="updateAction.php" method="post" name="Update" enctype="multipart/form-data">
+  <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">
   <input type="hidden" name="existing_image" value="<?= htmlspecialchars($user['image_path']) ?>">
 
   <div class="form-row">
@@ -35,36 +55,28 @@ $hobbies = explode(',', $user['hobby']);
     </div>
   </div>
   <div class="form-row">
-
-<div>
-
-  <label for="profile_img">Profile Image</label>
-  <input type="file" name="profile_img" id="profile_img" accept="image/*" />
-  <?php if (!empty($user['image_path'])): ?>
-    <img src="<?= htmlspecialchars($user['image_path']) ?>" alt="Current Image" width="60" />
-  <?php endif; ?>
-
+    <div>
+      <label for="profile_img">Profile Image</label>
+      <input type="file" name="profile_img" id="profile_img" accept="image/*" />
+      <?php if (!empty($user['image_path'])): ?>
+        <img src="<?= htmlspecialchars($user['image_path']) ?>" alt="Current Image" width="60" />
+      <?php endif; ?>
+    </div>
+    <div>
+      <label for="email">Email <span style="color:red;">*</span></label>
+      <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required />
+    </div>
   </div>
-  <div>
-   <label for="email">Email <span style="color:red;">*</span></label>
-  <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required />
-</div>
-  </div>
-
-<div class="form-row">
-
-<div>
+  <!-- <div class="form-row">
+    <div>
       <label for="password">Password (leave blank to keep unchanged)</label>
-  <input type="password" id="password" name="password" />
-  </div>
-  <div>
-  <label for="confirm_password">Confirm Password</label>
-  <input type="password" id="confirm_password" name="confirm_password" />
-  </div>
-  </div>
-
-
-  
+      <input type="password" id="password" name="password" />
+    </div>
+    <div>
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" />
+    </div>
+  </div> -->
   <div class="form-row">
     <div>
       <label for="DOB">Date of Birth <span style="color:red;">*</span></label>
@@ -75,7 +87,6 @@ $hobbies = explode(',', $user['hobby']);
       <input type="text" name="phone_num" value="<?= htmlspecialchars($user['phone_no']) ?>" pattern="^\d{10}$" maxlength="10" required />
     </div>
   </div>
-
   <!-- Gender -->
   <div class="form-row">
     <div class="box">
@@ -86,14 +97,11 @@ $hobbies = explode(',', $user['hobby']);
         <label><input type="radio" name="gender" value="other" <?= $user['gender'] == 'other' ? 'checked' : '' ?> /> <i class="fas fa-genderless"></i> Other</label>
       </div>
     </div>
-
     <div class="box">
       <label>Hobby <span style="font-size:10px;color:gray;">(select at least one)</span></label>
       <div class="hobby">
         <?php
         $allHobbies = ["Travelling", "Watch Movies", "Reading", "Cooking", "Photography", "Gaming", "Music"];
-        $hobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
-
         foreach ($allHobbies as $hobby) {
           $checked = in_array($hobby, $hobbies) ? 'checked' : '';
           echo "<label><input type='checkbox' name='hobby[]' value=\"$hobby\" $checked> $hobby</label> ";
@@ -104,26 +112,24 @@ $hobbies = explode(',', $user['hobby']);
   </div>
   <div class="form-row">
     <div>
-  <label for="address">Address <span style="color:red;">*</span></label>
-  <textarea name="address" id="address" rows="4" required><?= htmlspecialchars($user['address']) ?></textarea>
+      <label for="address">Address <span style="color:red;">*</span></label>
+      <textarea name="address" id="address" rows="4" required><?= htmlspecialchars($user['address']) ?></textarea>
     </div>
     <div>
-  <label for="country">Country <span style="color:red;">*</span></label>
-  <select name="country" id="country" required>
-    <option value="" disabled>Select From Here</option>
-    <option value="india" <?= $user['country'] == 'india' ? 'selected' : '' ?>>🇮🇳 India</option>
-    <option value="UK" <?= $user['country'] == 'UK' ? 'selected' : '' ?>>🇬🇧 UK</option>
-    <option value="russia" <?= $user['country'] == 'russia' ? 'selected' : '' ?>>🇷🇺 Russia</option>
-    <option value="usa" <?= $user['country'] == 'usa' ? 'selected' : '' ?>>🇺🇸 USA</option>
-  </select>
+      <label for="country">Country <span style="color:red;">*</span></label>
+      <select name="country" id="country" required>
+        <option value="" disabled>Select From Here</option>
+        <option value="india" <?= $user['country'] == 'india' ? 'selected' : '' ?>>🇮🇳 India</option>
+        <option value="UK" <?= $user['country'] == 'UK' ? 'selected' : '' ?>>🇬🇧 UK</option>
+        <option value="russia" <?= $user['country'] == 'russia' ? 'selected' : '' ?>>🇷🇺 Russia</option>
+        <option value="usa" <?= $user['country'] == 'usa' ? 'selected' : '' ?>>🇺🇸 USA</option>
+      </select>
     </div>
-    </div>
-
+  </div>
   <div class="form-row" style="display: flex; justify-content: flex-end; gap: 10px;">
     <input type="button" value="Cancel" onclick="window.location.href='index.php'" />
     <input type="submit" name="submit" value="Update" />
   </div>
 </form>
-
 </body>
 </html>

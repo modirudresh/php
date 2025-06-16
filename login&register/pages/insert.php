@@ -1,45 +1,85 @@
 <?php
 $errors = [];
 $old = [];
-$fields = [
-  'first_name' => ['required' => true, 'min' => 3],
-  'phone_num' => ['required' => true, 'pattern' => '/^\d{10}$/'],
-  'email' => ['required' => true, 'filter' => FILTER_VALIDATE_EMAIL],
-  'password' => ['required' => true],
-  'confirm_password' => ['required' => true],
-  'DOB' => ['required' => true],
-  'country' => ['required' => true],
-  'gender' => ['required' => true],
-  'hobby' => ['required' => true],
-  'address' => ['required' => true]
-];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  foreach ($fields as $field => $rules) {
-    $value = isset($_POST[$field]) ? $_POST[$field] : '';
-    if (!empty($rules['required']) && (empty($value) && $value !== '0')) {
-      $errors[$field] = ucfirst(str_replace('_', ' ', $field)) . ' is required.';
-    } else if (isset($rules['min']) && strlen($value) < $rules['min']) {
-      $errors[$field] = ucfirst(str_replace('_', ' ', $field)) . " must be at least {$rules['min']} characters.";
-    } else if (isset($rules['pattern']) && !preg_match($rules['pattern'], $value)) {
-      $errors[$field] = ucfirst(str_replace('_', ' ', $field)) . ' is invalid.';
-    } else if (isset($rules['filter']) && !filter_var($value, $rules['filter'])) {
-      $errors[$field] = 'Invalid ' . str_replace('_', ' ', $field) . '.';
-    }
-    if ($field !== 'password' && $field !== 'confirm_password') {
-      $old[$field] = isset($_POST[$field]) ? htmlspecialchars($_POST[$field]) : '';
+  if (empty($_POST['first_name'])) {
+    $errors['first_name'] = 'First name is required.';
+  } elseif (strlen($_POST['first_name']) < 3) {
+    $errors['first_name'] = 'First name must be at least 3 characters.';
+  } else {
+    $old['first_name'] = htmlspecialchars($_POST['first_name']);
+  }
+
+  if (!empty($_POST['last_name'])) {
+    $old['last_name'] = htmlspecialchars($_POST['last_name']);
+  }
+
+  if (empty($_POST['phone_num'])) {
+    $errors['phone_num'] = 'Phone number is required.';
+  } elseif (!preg_match('/^\d{10}$/', $_POST['phone_num'])) {
+    $errors['phone_num'] = 'Phone number must be exactly 10 digits.';
+  } else {
+    $old['phone_num'] = htmlspecialchars($_POST['phone_num']);
+  }
+
+  if (empty($_POST['email'])) {
+    $errors['email'] = 'Email is required.';
+  } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    $errors['email'] = 'Invalid email.';
+  } else {
+    $old['email'] = htmlspecialchars($_POST['email']);
+  }
+
+  if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] !== UPLOAD_ERR_NO_FILE) {
+    $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    $file_name = $_FILES['profile_img']['name'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    if (!in_array($file_ext, $allowed_exts)) {
+      $errors['profile_img'] = 'Please select a valid image file (jpg, jpeg, png, gif, bmp, webp).';
     }
   }
-  if (!isset($errors['password']) && !isset($errors['confirm_password'])) {
-    if ($_POST['password'] !== $_POST['confirm_password']) {
-      $errors['confirm_password'] = 'Passwords do not match.';
-    }
+  
+  if (empty($_POST['password'])) {
+    $errors['password'] = 'Password is required.';
+  } elseif (strlen($_POST['password']) < 6) {
+    $errors['password'] = 'Password must be at least 6 characters.';
   }
-  if (isset($_POST['hobby']) && is_array($_POST['hobby'])) {
+
+  if (empty($_POST['confirm_password'])) {
+    $errors['confirm_password'] = 'Confirm password is required.';
+  } elseif ($_POST['password'] !== $_POST['confirm_password']) {
+    $errors['confirm_password'] = 'Passwords do not match.';
+  }
+
+  if (empty($_POST['DOB'])) {
+    $errors['DOB'] = 'Date of birth is required.';
+  } else {
+    $old['DOB'] = htmlspecialchars($_POST['DOB']);
+  }
+
+  if (empty($_POST['country'])) {
+    $errors['country'] = 'Country is required.';
+  } else {
+    $old['country'] = htmlspecialchars($_POST['country']);
+  }
+
+  if (empty($_POST['gender'])) {
+    $errors['gender'] = 'Gender is required.';
+  } else {
+    $old['gender'] = $_POST['gender'];
+  }
+
+  if (empty($_POST['hobby']) || !is_array($_POST['hobby'])) {
+    $errors['hobby'] = 'At least one hobby is required.';
+  } else {
     $old['hobby'] = $_POST['hobby'];
   }
-  if (isset($_POST['gender'])) {
-    $old['gender'] = $_POST['gender'];
+
+  if (empty($_POST['address'])) {
+    $errors['address'] = 'Address is required.';
+  } else {
+    $old['address'] = htmlspecialchars($_POST['address']);
   }
 }
 
@@ -85,7 +125,6 @@ function isChecked($name, $value, $old)
             oninput="this.nextElementSibling.textContent=(this.value===''?'First name is required.':(this.value.length<3?'First name must be at least 3 characters.':''));"
             onblur="this.nextElementSibling.textContent=(this.value===''?'First name is required.':(this.value.length<3?'First name must be at least 3 characters.':''));"
           />
-          <div style="color:red;font-size:13px;"></div>
           <?php echo showError('first_name', $errors); ?>
         </div>
         <div>
@@ -94,7 +133,7 @@ function isChecked($name, $value, $old)
             oninput="this.nextElementSibling.textContent=(this.value===''?'Last name is required.':(this.value.length<3?'Last name must be at least 3 characters.':''));"
             onblur="this.nextElementSibling.textContent=(this.value===''?'Last name is required.':(this.value.length<3?'Last name must be at least 3 characters.':''));"
           />
-          <div style="color:red;font-size:13px;"></div>
+           
           <?php echo showError('last_name', $errors); ?>
         </div>
         <div>
@@ -104,7 +143,7 @@ function isChecked($name, $value, $old)
             onblur="this.nextElementSibling.textContent=(this.value===''?'Phone number is required.':(this.value.length<10?'Phone number must be exactly 10 digits.':''));"
             onkeypress="return event.charCode>=48&&event.charCode<=57"
           />
-          <div style="color:red;font-size:13px;"></div>
+           
           <?php echo showError('phone_num', $errors); ?>
         </div>
       </div>
@@ -115,7 +154,7 @@ function isChecked($name, $value, $old)
             oninput="this.parentNode.querySelector('div[style]').textContent=(this.value===''?'Email is required.':(!this.checkValidity()?'Please enter a valid email address.':''));"
             onblur="this.parentNode.querySelector('div[style]').textContent=(this.value===''?'Email is required.':(!this.checkValidity()?'Please enter a valid email address.':''));"
           />
-          <div style="color:red;font-size:13px;"></div>
+           
           <?php echo showError('email', $errors); ?>
         </div>
         <div>
@@ -124,7 +163,7 @@ function isChecked($name, $value, $old)
             oninput="this.nextElementSibling.textContent=(this.value && !/\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(this.value))?'Please select a valid image file (jpg, jpeg, png, gif, bmp, webp).':'';"
             onblur="this.nextElementSibling.textContent=(this.value && !/\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(this.value))?'Please select a valid image file (jpg, jpeg, png, gif, bmp, webp).':'';"
           />
-          <div style="color:red;font-size:13px;"></div>
+           
         </div>
       </div>
       <div class="form-row">
@@ -158,25 +197,25 @@ function isChecked($name, $value, $old)
       <div class="form-row">
         <div>
           <label for="DOB">Date of Birth <span style="color:red;">*</span></label>
-          <input type="text" id="datepicker" name="DOB" placeholder="YYYY-MM-DD" value="<?php echo $old['DOB'] ?? ''; ?>" autocomplete="off" readonly
-            oninput="this.nextElementSibling.textContent=this.value?'':'Date of birth is required.';"
-            onblur="this.nextElementSibling.textContent=this.value?'':'Date of birth is required.';">
+          <input type="text" id="datepicker" name="DOB" placeholder="YYYY-MM-DD"
+            value="<?php echo $old['DOB'] ?? ''; ?>" autocomplete="off" readonly
+            oninput="this.nextElementSibling.textContent=this.value?'':'Date of birth is required.';">
           <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
           <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js"></script>
           <script>
             $(function () {
               $('#datepicker').datepicker({
-                uiLibrary: 'bootstrap5',
-                format: 'yyyy-mm-dd',
-                minDate: '01/01/1924',
-                maxDate: '12/31/2005'
+          uiLibrary: 'bootstrap5',
+          format: 'yyyy-mm-dd',
+          minDate: '1924-01-01',
+          maxDate: '2005-12-31'
               });
             });
           </script>
           <?php echo showError('DOB', $errors); ?>
         </div>
         <div>
-          <div style="color:red;font-size:13px;"></div>
+           
           <label for="country">Country <span style="color:red;">*</span></label>
           <?php include("../components/dropdown.html"); ?>
           <?php echo showError('country', $errors); ?>
@@ -199,7 +238,7 @@ function isChecked($name, $value, $old)
               }
             });
           </script>
-          <div style="color:red;font-size:13px;"></div>
+           
         </div>
       </div>
       <div class="form-row">

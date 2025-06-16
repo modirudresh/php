@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $imagePath = '';
 
         if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = 'uploads/';
+            $uploadDir = './uploads/';
             $fullUploadDir = __DIR__ . '/' . $uploadDir;
 
             if (!is_dir($fullUploadDir)) {
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hobbyStr = implode(', ', $hobbies);
 
             $stmt = $con->prepare("
-                INSERT INTO user 
+                INSERT INTO users 
                 (first_name, last_name, email, password, image_path, address, DOB, phone_no, gender, hobby, country, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ");
@@ -85,10 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
 
                 if ($stmt->execute()) {
-                    $message = 'User Created successfully.';
+                    $message = 'Data inserted successfully.';
                     $status = 'success';
                 } else {
-                    $message = 'User not Created: ' . $stmt->error;
+                    $message = 'Insert failed: ' . $stmt->error;
                     $status = 'error';
                 }
 
