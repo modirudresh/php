@@ -9,7 +9,6 @@
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="Logo.png" type="image/icon">
         <style>
-            /* Sidebar */
             .sidebar {
                 position: fixed;
                 top: 0;
@@ -52,19 +51,13 @@
                 color: #ffc107;
             }
 
-            /* Push form to the right */
             form {
-                margin-left: 280px;
-                /* 260px + some gap */
                 background: #fff;
                 padding: 20px;
                 border-radius: 8px;
-                width: calc(100% - 300px);
-                max-width: 1000px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
 
-            /* Sidebar Dropdown Styles */
             .dropdown {
                 position: relative;
             }
@@ -98,39 +91,6 @@
     </head>
 
     <body>
-        <div class="sidebar">
-            <h2>Admin Panel</h2>
-            <ul>
-                <li><a href="#"><i class="fas fa-user-plus"></i> Add User</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">
-                        <i class="fas fa-users"></i> Manage Users <i class="fas fa-caret-down"
-                            style="margin-left:auto;"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">All Users</a></li>
-                        <li><a href="#">Active Users</a></li>
-                        <li><a href="#">Blocked Users</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </div>
-
-
-        <script>
-            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-                toggle.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const parent = this.closest('.dropdown');
-                    parent.classList.toggle('active');
-                });
-            });
-        </script>
-
-
     </body>
 
 </html>

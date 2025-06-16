@@ -17,12 +17,12 @@ include("sidebar.html");
 require("config.php");
 
 if (!isset($con) || !($con instanceof mysqli)) {
-  die("<p>Database connection not established. Please check config.php.</p>");
+    die("<p>Database connection not established. Please verify your configuration in <strong>config.php</strong>.</p>");
 }
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-  header("Location: index.php");
-  exit();
+    header("Location: index.php");
+    exit();
 }
 
 $id = (int) $_GET['id'];
@@ -34,13 +34,13 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 if (!$user) {
-  echo "<p>User not found.</p>";
-  exit();
+    echo "<p>User not found. Please ensure the user exists in the database.</p>";
+    exit();
 }
 
 $hobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
 ?>
-<form action="updateAction.php" method="post" name="Update" enctype="multipart/form-data">
+<form action="updateAction.php" method="post" name="Update" enctype="multipart/form-data" class="update-form">
   <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">
   <input type="hidden" name="existing_image" value="<?= htmlspecialchars($user['image_path']) ?>">
 
@@ -59,7 +59,10 @@ $hobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
       <label for="profile_img">Profile Image</label>
       <input type="file" name="profile_img" id="profile_img" accept="image/*" />
       <?php if (!empty($user['image_path'])): ?>
-        <img src="<?= htmlspecialchars($user['image_path']) ?>" alt="Current Image" width="60" />
+        <div class="current-image">
+          <span>Current Image:</span>
+          <img src="<?= htmlspecialchars($user['image_path']) ?>" alt="Current Profile Image" width="60" />
+        </div>
       <?php endif; ?>
     </div>
     <div>
@@ -67,44 +70,42 @@ $hobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
       <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required />
     </div>
   </div>
-  <!-- <div class="form-row">
-    <div>
-      <label for="password">Password (leave blank to keep unchanged)</label>
-      <input type="password" id="password" name="password" />
-    </div>
-    <div>
-      <label for="confirm_password">Confirm Password</label>
-      <input type="password" id="confirm_password" name="confirm_password" />
-    </div>
-  </div> -->
   <div class="form-row">
     <div>
       <label for="DOB">Date of Birth <span style="color:red;">*</span></label>
       <input type="date" id="DOB" name="DOB" value="<?= htmlspecialchars($user['DOB']) ?>" min="1924-01-01" max="2005-12-31" required />
     </div>
     <div>
-      <label for="phone_num">Phone No. <span style="color:red;">*</span></label>
-      <input type="text" name="phone_num" value="<?= htmlspecialchars($user['phone_no']) ?>" pattern="^\d{10}$" maxlength="10" required />
+      <label for="phone_num">Phone Number <span style="color:red;">*</span></label>
+      <input type="text" id="phone_num" name="phone_num" value="<?= htmlspecialchars($user['phone_no']) ?>" pattern="^\d{10}$" maxlength="10" required />
     </div>
   </div>
-  <!-- Gender -->
   <div class="form-row">
     <div class="box">
       <label>Gender <span style="color:red;">*</span></label>
       <div class="gender">
-        <label><input type="radio" name="gender" value="male" <?= $user['gender'] == 'male' ? 'checked' : '' ?> /> <i class="fas fa-mars"></i> Male</label>
-        <label><input type="radio" name="gender" value="female" <?= $user['gender'] == 'female' ? 'checked' : '' ?> /> <i class="fas fa-venus"></i> Female</label>
-        <label><input type="radio" name="gender" value="other" <?= $user['gender'] == 'other' ? 'checked' : '' ?> /> <i class="fas fa-genderless"></i> Other</label>
+        <label>
+          <input type="radio" name="gender" value="male" <?= $user['gender'] == 'male' ? 'checked' : '' ?> />
+          <i class="fas fa-mars"></i> Male
+        </label>
+        <label>
+          <input type="radio" name="gender" value="female" <?= $user['gender'] == 'female' ? 'checked' : '' ?> />
+          <i class="fas fa-venus"></i> Female
+        </label>
+        <label>
+          <input type="radio" name="gender" value="other" <?= $user['gender'] == 'other' ? 'checked' : '' ?> />
+          <i class="fas fa-genderless"></i> Other
+        </label>
       </div>
     </div>
     <div class="box">
-      <label>Hobby <span style="font-size:10px;color:gray;">(select at least one)</span></label>
+      <label>Hobbies <span style="font-size:10px;color:gray;">(Select at least one)</span></label>
       <div class="hobby">
         <?php
         $allHobbies = ["Travelling", "Watch Movies", "Reading", "Cooking", "Photography", "Gaming", "Music"];
         foreach ($allHobbies as $hobby) {
-          $checked = in_array($hobby, $hobbies) ? 'checked' : '';
-          echo "<label><input type='checkbox' name='hobby[]' value=\"$hobby\" $checked> $hobby</label> ";
+            $checked = in_array($hobby, $hobbies) ? 'checked' : '';
+            echo "<label><input type='checkbox' name='hobby[]' value=\"$hobby\" $checked> $hobby</label> ";
         }
         ?>
       </div>
@@ -118,11 +119,11 @@ $hobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
     <div>
       <label for="country">Country <span style="color:red;">*</span></label>
       <select name="country" id="country" required>
-        <option value="" disabled>Select From Here</option>
+        <option value="" disabled>Select Your Country</option>
         <option value="india" <?= $user['country'] == 'india' ? 'selected' : '' ?>>🇮🇳 India</option>
-        <option value="UK" <?= $user['country'] == 'UK' ? 'selected' : '' ?>>🇬🇧 UK</option>
+        <option value="UK" <?= $user['country'] == 'UK' ? 'selected' : '' ?>>🇬🇧 United Kingdom</option>
         <option value="russia" <?= $user['country'] == 'russia' ? 'selected' : '' ?>>🇷🇺 Russia</option>
-        <option value="usa" <?= $user['country'] == 'usa' ? 'selected' : '' ?>>🇺🇸 USA</option>
+        <option value="usa" <?= $user['country'] == 'usa' ? 'selected' : '' ?>>🇺🇸 United States</option>
       </select>
     </div>
   </div>

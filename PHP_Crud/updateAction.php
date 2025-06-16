@@ -7,70 +7,73 @@ $message = '';
 $status = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $id = $_POST['id'] ?? null;
-  $firstName       = $_POST['first_name'] ?? '';
-  $lastName        = $_POST['last_name'] ?? '';
-  $email           = $_POST['email'] ?? '';
-  $password        = $_POST['password'] ?? '';
-  $confirmPassword = $_POST['confirm_password'] ?? '';
-  $address         = $_POST['address'] ?? '';
-  $dob             = $_POST['DOB'] ?? '';
-  $phone           = $_POST['phone_num'] ?? '';
-  $gender          = $_POST['gender'] ?? '';
-  $hobbies         = $_POST['hobby'] ?? [];
-  $country         = $_POST['country'] ?? '';
-  $imagePath       = $_POST['existing_image'] ?? '';
+  $id         = $_POST['id'] ?? null;
+  $firstName  = trim($_POST['first_name'] ?? '');
+  $lastName   = trim($_POST['last_name'] ?? '');
+  $email      = trim($_POST['email'] ?? '');
+  $address    = trim($_POST['address'] ?? '');
+  $dob        = trim($_POST['DOB'] ?? '');
+  $phone      = trim($_POST['phone_num'] ?? '');
+  $gender     = $_POST['gender'] ?? '';
+  $hobbies    = $_POST['hobby'] ?? [];
+  $country    = $_POST['country'] ?? '';
+  $imagePath  = $_POST['existing_image'] ?? '';
 
-  if ($password !== $confirmPassword) {
-    $message = 'Passwords do not match.';
-    $status = 'error';
-  } else {
-    $hashedPassword = !empty($password) ? password_hash($password, PASSWORD_DEFAULT) : null;
-    $hobbyStr = implode(', ', $hobbies);
+  $hobbyStr = implode(', ', $hobbies);
 
-    if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === UPLOAD_ERR_OK) {
-      $uploadDir = './uploads/';
-      $fullUploadDir = __DIR__ . '/' . $uploadDir;
+  // Handle image upload if a new file is provided
+  if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === UPLOAD_ERR_OK) {
+    $uploadDir = './uploads/';
+    $fullUploadDir = __DIR__ . '/' . $uploadDir;
 
-      if (!is_dir($fullUploadDir)) {
-        mkdir($fullUploadDir, 0755, true);
-      }
+    if (!is_dir($fullUploadDir)) {
+      mkdir($fullUploadDir, 0755, true);
+    }
 
-      $fileTmp = $_FILES['profile_img']['tmp_name'];
-      $fileName = basename($_FILES['profile_img']['name']);
-      $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-      $allowedExts = ['jpg', 'jpeg', 'png', 'gif'];
+    $fileTmp = $_FILES['profile_img']['tmp_name'];
+    $fileName = basename($_FILES['profile_img']['name']);
+    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+    $allowedExts = ['jpg', 'jpeg', 'png', 'gif'];
 
-      if (in_array($fileExt, $allowedExts)) {
-        $newFileName = uniqid('img_', true) . '.' . $fileExt;
-        $imagePath = $uploadDir . $newFileName;
-        $absolutePath = $fullUploadDir . $newFileName;
+    if (in_array($fileExt, $allowedExts)) {
+      $newFileName = uniqid('img_', true) . '.' . $fileExt;
+      $imagePath = $uploadDir . $newFileName;
+      $absolutePath = $fullUploadDir . $newFileName;
 
-        if (!move_uploaded_file($fileTmp, $absolutePath)) {
-          $message = 'Image upload failed.';
-          $status = 'error';
-        }
-      } else {
-        $message = 'Invalid image file type. Allowed: jpg, jpeg, png, gif';
+      if (!move_uploaded_file($fileTmp, $absolutePath)) {
+        $message = 'Image upload failed. Please try again or contact support.';
         $status = 'error';
       }
+    } else {
+      $message = 'Invalid image file type. Allowed formats: jpg, jpeg, png, gif.';
+      $status = 'error';
     }
   }
 
   if ($status !== 'error') {
-    if ($hashedPassword !== null) {
-      $stmt = $con->prepare("UPDATE users SET first_name=?, last_name=?, email=?, password=?, image_path=?, address=?, DOB=?, phone_no=?, gender=?, hobby=?, country=?, updated_at=NOW() WHERE id=?");
-      $stmt->bind_param('sssssssssssi', $firstName, $lastName, $email, $hashedPassword, $imagePath, $address, $dob, $phone, $gender, $hobbyStr, $country, $id);
-    } else {
-      $stmt = $con->prepare("UPDATE users SET first_name=?, last_name=?, email=?, image_path=?, address=?, DOB=?, phone_no=?, gender=?, hobby=?, country=?, updated_at=NOW() WHERE id=?");
-      $stmt->bind_param('ssssssssssi', $firstName, $lastName, $email, $imagePath, $address, $dob, $phone, $gender, $hobbyStr, $country, $id);
-    }
+    $stmt = $con->prepare(
+      "UPDATE users SET first_name=?, last_name=?, email=?, image_path=?, address=?, DOB=?, phone_no=?, gender=?, hobby=?, country=?, updated_at=NOW() WHERE id=?"
+    );
+    $stmt->bind_param(
+      'ssssssssssi',
+      $firstName,
+      $lastName,
+      $email,
+      $imagePath,
+      $address,
+      $dob,
+      $phone,
+      $gender,
+      $hobbyStr,
+      $country,
+      $id
+    );
 
     if ($stmt->execute()) {
-      $message = 'User updated successfully.';
+      $message = 'User information has been updated successfully. Thank you for keeping your profile up to date.';
       $status = 'success';
     } else {
-      $message = 'Update failed: ' . $stmt->error;
+      $message = 'Update failed due to a system error: ' . $stmt->error . '. Please try again later.';
       $status = 'error';
     }
 
@@ -84,28 +87,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header <?= ($status === 'success') ? 'bg-success text-white' : 'bg-danger text-white' ?>">
-    <h5 class="modal-title" id="feedbackModalLabel"><?= ucfirst($status) ?></h5>
+    <div class="modal-content">
+      <div class="modal-header <?= ($status === 'success') ? 'bg-success text-white' : 'bg-danger text-white' ?>">
+        <h5 class="modal-title" id="feedbackModalLabel">
+          <?= ($status === 'success') ? 'Update Successful' : 'Update Failed' ?>
+        </h5>
+      </div>
+      <div class="modal-body">
+        <?= htmlspecialchars($message) ?>
+      </div>
     </div>
-    <div class="modal-body">
-    <?= htmlspecialchars($message) ?>
-    </div>
-  </div>
   </div>
 </div>
 
 <script>
-  <?php if (!empty($message)): ?>
+<?php if (!empty($message)): ?>
   const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
   modal.show();
 
-  // Auto-close after 1.5 seconds
+  // Automatically close the modal after 1.5 seconds and redirect if successful
   setTimeout(() => {
     modal.hide();
     <?php if ($status === 'success'): ?>
     window.location.href = 'index.php';
     <?php endif; ?>
   }, 1500);
-  <?php endif; ?>
+<?php endif; ?>
 </script>
