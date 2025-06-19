@@ -11,7 +11,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once('../config/config.php');
+require_once('../../../config/config.php');
 
 $message = '';
 $status = ''; 
@@ -70,7 +70,7 @@ if (isset($_GET['id'])) {
     setTimeout(() => {
       modal.hide();
       <?php if ($status === 'success'): ?>
-        window.location.href = 'User_index.php';
+        window.location.href = 'index.php';
       <?php endif; ?>
     }, 3000);
   <?php endif; ?>

@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (isset($_SESSION['user_id'])) {
+
+  header("Location: dashboard.php");
+  exit();
+}
 if (isset($_SESSION['logout_message'])) {
     echo '<div class="alert alert-info alert-dismissible fade show" role="alert">'
        . htmlspecialchars($_SESSION['logout_message']) .
