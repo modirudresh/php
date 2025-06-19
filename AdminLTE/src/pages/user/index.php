@@ -8,10 +8,10 @@ $sql = "SELECT * FROM User ORDER BY created_at ASC";
 $result = mysqli_query($con, $sql);
 ?>
 
-<?php include('../../components/header.php'); ?>
-<?php include('../../components/sidebar.php'); ?>
+<?php include('../../header.php'); ?>
+<?php include('../../sidebar.php'); ?>
 
-<div class="container-fluid">
+<!-- <div class="container-fluid"> -->
   <div class="row mb-2">
     <div class="col-sm-6"><h1 class="m-0">User List</h1></div>
     <div class="col-sm-6">
@@ -22,9 +22,7 @@ $result = mysqli_query($con, $sql);
     </div>
   </div>
 </div>
-<?php
-            if (isset($_SESSION['user_name'])) {
-           ?>
+
 <section class="content">
   <div class="container-fluid">
     <div class="card">
@@ -36,9 +34,12 @@ $result = mysqli_query($con, $sql);
         </div>
       </div>
       <div class="card-body">
-    
+   
       <table id="example1" class="table table-bordered table-striped">
-          <thead class="text-center">
+      <?php
+            if (isset($_SESSION['user_name'])) {
+           ?>  
+      <thead class="text-center">
             <tr>
               <th>#</th>
               <th>Full Name</th>
@@ -65,9 +66,9 @@ $result = mysqli_query($con, $sql);
                   <td><?= !empty($res['email']) ? htmlspecialchars($res['email']) : 'N/A' ?></td>
                   <td>
                     <?php if (!empty($res['image_path']) && file_exists($res['image_path'])): ?>
-                      <img src="../<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:60px; height:auto;">
+                      <img src="<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:60px; height:auto;">
                     <?php else: ?>
-                      <img src="../uploads/default.png" alt="Default Profile" style="width:60px; height:auto; object-fit:contain;">
+                      <img src="../../assets/img/default.png" alt="Default Profile" style="width:60px; height:auto; object-fit:contain;">
                     <?php endif; ?>
                   </td>
                   <td>
@@ -133,7 +134,7 @@ $result = mysqli_query($con, $sql);
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <a href="User_delete.php?id=<?= htmlspecialchars($res['id']) ?>" class="btn btn-danger">Delete</a>
+                            <a href="delete.php?id=<?= htmlspecialchars($res['id']) ?>" class="btn btn-danger">Delete</a>
                           </div>
                         </div>
                       </div>
@@ -145,21 +146,22 @@ $result = mysqli_query($con, $sql);
               <tr><td colspan="10" class="text-center">No records found.</td></tr>
             <?php endif; ?>
           </tbody>
-        </table>
+          <?php
+} else {
+   echo "<div class='alert alert-warning' style='min-height: 100px;'>Please log in to view the user list.<br><a href='../login.php' class='btn btn-primary' style='text-decoration:none;'>Login</a></div>";
+}
+?>
 
-        
+      </table>
+
+      
        
-      </div>
+        </div>
     </div>
-  </div>
-</section>
-<?php include('../../components/footer.php'); ?>
+    </div>
 
-<?php
-            } else {
-              echo "<div class='alert alert-warning' style='min-height: 100px;'>Please log in to view the user list.<br><a href='../login.php' class='btn btn-primary' style='text-decoration:none;'>Login</a></div>";
-            }
-            ?>
+
+
 </div>
 
 <!-- DataTables  & Plugins -->
@@ -175,6 +177,17 @@ $result = mysqli_query($con, $sql);
 <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI -->
+<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<script>$.widget.bridge('uibutton', $.ui.button);</script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Toastr -->
+<script src="../../plugins/toastr/toastr.min.js"></script>
+<!-- AdminLTE -->
+<script src="../../dist/js/adminlte.js"></script>
 
 <script>
     $(function () {
@@ -199,3 +212,4 @@ $result = mysqli_query($con, $sql);
         modal.show();
       }
     </script>
+<?php include('../../footer.php'); ?>

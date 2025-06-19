@@ -12,6 +12,17 @@
   <link rel="stylesheet" href="../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      background-color: #f4f6f9;
+    }
+  </style>
 </head>
 <body class="hold-transition register-page">
 <div class="register-box">
@@ -43,14 +54,18 @@
         </div>
 
         <div class="input-group mb-3">
-          <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address"   autocomplete="off"
+         autocapitalize="off"
+         spellcheck="false">
           <div class="input-group-append">
             <div class="input-group-text"><span class="fas fa-envelope"></span></div>
           </div>
         </div>
 
         <div class="input-group mb-3">
-          <input type="password" class="form-control password" id="password" name="password" placeholder="Enter password">
+          <input type="password" class="form-control password" id="password" name="password" placeholder="Enter password" autocomplete="new-password"
+         autocapitalize="off"
+         spellcheck="false">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fa fa-eye toggle icon" style="cursor: pointer;"></span>
@@ -105,7 +120,7 @@ $(function () {
       password: {
         required: true,
         minlength: 8,
-        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
       },
       confirm_password: { required: true, equalTo: '#password' },
       terms: { required: true }

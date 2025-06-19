@@ -1,16 +1,20 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 require("../../../config/config.php");
 
-// Redirect if ID is not provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header("Location: User_index.php");
+    header("Location: index.php");
     exit();
 }
 
 $id = (int) $_GET['id'];
 
-// Fetch user data using prepared statement
 $stmt = $con->prepare("SELECT * FROM User WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -18,22 +22,18 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
 
-// Redirect if user not found
 if (!$user) {
-    header("Location: User_index.php");
+    header("Location: index.php");
     exit();
 }
 
-// Extract hobbies from DB (comma-separated) to array
 $selectedHobbies = array_map('trim', explode(',', $user['hobby'] ?? ''));
-
-// All possible hobby options (for rendering checkboxes)
 $allHobbies = [
     'Reading', 'Traveling', 'Sports', 'Music',
     'Gaming', 'Watching Movies', 'Cooking', 'Photography'
 ];
 
-// Prepare form data for prefilling
+
 $formData = [
     'id'         => $user['id'],
     'first_name' => $user['first_name'] ?? '',
@@ -48,8 +48,8 @@ $formData = [
 ];
 ?>
 
-<?php include('../../components/header.php'); ?>
-<?php include('../../components/sidebar.php'); ?>
+<?php include('../../header.php'); ?>
+<?php include('../../sidebar.php'); ?>
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6"><h1 class="m-0">Update User</h1></div>
@@ -68,18 +68,17 @@ $formData = [
         <div class="card card-warning">
           <div class="card-header"><h3 class="card-title">Update User</h3></div>
 
-          <form id="userForm" action="User_editAction.php" method="post" enctype="multipart/form-data">
+          <?php
+            if (isset($_SESSION['user_name'])) {
+           ?>
+          <form id="userForm" action="editAction.php" method="post" enctype="multipart/form-data">
             <div class="card-body">
-
-              <!-- Hidden User ID -->
               <input type="hidden" name="id" value="<?= $user['id'] ?>">
-
-              <!-- First Name, Last Name -->
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="firstname">First Name <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="firstname" name="first_name"
-       value="<?= htmlspecialchars($formData['first_name']) ?>" placeholder="Enter first name">
+                  value="<?= htmlspecialchars($formData['first_name']) ?>" placeholder="Enter first name">
                 </div>
                 <div class="form-group col-md-6">
                   <label for="lastname">Last Name <small class="text-muted">(optional)</small></label>
@@ -105,7 +104,7 @@ $formData = [
               <div class="row">
               <div class="form-group col-md-2">
                     <small class="form-text text-muted">Current Image:</small>
-                    <img src="<?= (!empty($user['image_path']) && file_exists($user['image_path']) ? '../' . $user['image_path'] : '../../uploads/default.png') ?>" alt="Profile" class="img-thumbnail mt-1 shadow-lg" style="height: 80px; width:auto;">
+                    <img src="./<?= (!empty($user['image_path']) && file_exists($user['image_path']) ? $user['image_path'] : '../../assets/img/profile.png') ?>" alt="Profile" class="img-thumbnail mt-1 shadow-lg" style="height: 80px; width:auto;">
                 </div>
 
                 <div class="form-group col-md-5">
@@ -170,7 +169,6 @@ $formData = [
                   <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
                   <div class="bg-light p-3 rounded shadow-sm">
                   <?php
-                      // Use $allHobbies defined above
                       foreach ($allHobbies as $hobby) {
                           $checked = in_array($hobby, $selectedHobbies) ? 'checked' : '';
                           echo "<div class='form-check form-check-inline'>
@@ -210,12 +208,18 @@ $formData = [
               <button type="submit" name="update" class="btn btn-warning float-right">Update User</button>
             </div>
           </form>
+
+          <?php
+            } else {
+              echo "<div class='alert alert-warning' style='min-height: 100px; margin-top:10px;'>Please log in to view the user list.<br><a href='../login.php' class='btn btn-primary' style='text-decoration:none;'>Login</a></div>";
+            }
+?>
         </div>
       </div>
     </section>
   </div>
 
-  <?php include('../../components/footer.php'); ?>
+  <?php include('../../footer.php'); ?>
 
 </div>
 
@@ -230,7 +234,6 @@ $formData = [
 
 <script>
   $(function () {
-        // Custom method for file size validation with dynamic message
         $.validator.addMethod('filesize', function (value, element, param) {
           if (element.files.length === 0) return true;
           return element.files[0].size <= param;
@@ -278,7 +281,7 @@ $formData = [
             country: { required: true },
             image_path: {
               extension: "jpg|jpeg|png|gif",
-              filesize: 2 * 1024 * 1024 // 2MB
+              filesize: 2 * 1024 * 1024 
             }
           },
           messages: {

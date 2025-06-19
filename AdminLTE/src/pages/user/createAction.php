@@ -1,20 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- AdminLTE & Toastr CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-<!-- jQuery + Toastr JS -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-</head>
-<body>
-    
 <?php
 if (!empty($message)) {
     $_SESSION['message'] = $message;
@@ -23,9 +6,9 @@ if (!empty($message)) {
     $_SESSION['formData'] = $formData;
 
     if ($status === 'success') {
-        header("Location: User_index.php");
+        header("Location: index.php");
     } else {
-        header("Location: User_form.php"); // change to actual form file
+        header("Location: create.php"); 
     }
     exit;
 }
@@ -38,7 +21,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once('../config/config.php');
+require_once('../../../config/config.php');
 
 $message = '';
 $status = '';
@@ -46,7 +29,7 @@ $formData = [];
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize input
+
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -74,45 +57,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $imagePath = '';
     if (empty($errors) && isset($_FILES['image_path']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'uploads/';
-        $fullUploadDir = __DIR__ . '/' . $uploadDir;
-    
-        // Ensure upload directory exists
-        if (!is_dir($fullUploadDir)) {
-            if (!mkdir($fullUploadDir, 0755, true)) {
+        $uploadDir = __DIR__ . '/uploads/';
+        $uploadDirRelative = 'uploads/';  
+
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
                 $errors['image_path'] = 'Failed to create upload directory.';
             }
         }
-    
-        // Check if upload directory is writable
-        if (!isset($errors['image_path']) && !is_writable($fullUploadDir)) {
+
+        if (!isset($errors['image_path']) && !is_writable($uploadDir)) {
             $errors['image_path'] = 'Upload directory is not writable.';
         }
-    
+
         if (empty($errors)) {
             $tmpName = $_FILES['image_path']['tmp_name'];
             $originalName = basename($_FILES['image_path']['name']);
             $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-    
+
             if (!in_array($ext, $allowed)) {
                 $errors['image_path'] = 'Allowed image types: jpg, jpeg, png, gif.';
             } elseif ($_FILES['image_path']['size'] > 2 * 1024 * 1024) {
                 $errors['image_path'] = 'Max file size is 2MB.';
             } else {
                 $newFileName = uniqid('img_', true) . '.' . $ext;
-                $imagePath = $uploadDir . $newFileName;
-                $absolutePath = $fullUploadDir . $newFileName;
-    
+                $absolutePath = $uploadDir . $newFileName;
+                $imagePath = $uploadDirRelative . $newFileName;
+
                 if (!move_uploaded_file($tmpName, $absolutePath)) {
                     $errors['image_path'] = 'Failed to move uploaded file.';
                 }
             }
         }
     }
-    
-
-    if (empty($errors)) {
+   if (empty($errors)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $hobbyStr = implode(', ', $hobbies);
 
@@ -140,8 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hobbyStr,
                 $country
             );
-
             if ($stmt->execute()) {
+                header("Location: index.php");
                 $message = 'Data inserted successfully.';
                 $status = 'success';
                 $formData = [];
@@ -158,6 +137,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <?php if (!empty($message)) : ?>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<!-- jQuery + Toastr JS -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
     $(function () {
         toastr.options = {
@@ -184,5 +170,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 </script>
 <?php endif; ?>
-</body>
-</html>
+

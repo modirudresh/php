@@ -23,41 +23,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $hobbyStr = implode(', ', $hobbies);
 
-    // Handle image upload if a new file is provided
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'uploads/';
-        $fullUploadDir = __DIR__ . '/' . $uploadDir;
-
-        if (!is_dir($fullUploadDir)) {
-            mkdir($fullUploadDir, 0755, true);
+        $uploadDir = __DIR__ . '/uploads/';
+        $uploadDirRelative = 'uploads/';
+    
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
         }
-
+    
         $tmpName = $_FILES['image_path']['tmp_name'];
         $originalName = basename($_FILES['image_path']['name']);
         $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-
+    
         if (!in_array($ext, $allowed)) {
             $errors['image_path'] = 'Allowed file types: jpg, jpeg, png, gif.';
         } elseif ($_FILES['image_path']['size'] > 2 * 1024 * 1024) {
             $errors['image_path'] = 'File size must be less than 2MB.';
         } else {
             $newFileName = uniqid('img_', true) . '.' . $ext;
-            $imagePath = $uploadDir . $newFileName;
-            $absolutePath = $fullUploadDir . $newFileName;
-
+            $absolutePath = $uploadDir . $newFileName;
+            $imagePath = $uploadDirRelative . $newFileName;
+    
             if (!move_uploaded_file($tmpName, $absolutePath)) {
                 $errors['image_path'] = 'Image upload failed.';
             }
         }
     }
-
-    // Fallback to existing image if no new upload
     if (empty($imagePath) && isset($_POST['existing_image'])) {
         $imagePath = $_POST['existing_image'];
     }
-
-    // Proceed if no errors
     if (empty($errors)) {
         $stmt = $con->prepare("
             UPDATE User 
@@ -109,8 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['message'] = 'Please correct the errors below.';
         $_SESSION['status'] = 'error';
     }
-
-    // Redirect immediately to index page
     header('Location: ./index.php');
     exit();
 }

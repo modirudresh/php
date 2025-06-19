@@ -1,4 +1,12 @@
 <?php
+session_start(); // Start the session
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -30,7 +38,8 @@ if (isset($_GET['id'])) {
         $status = 'success';
         } else {
             $message = 'User not Deleted: ' . $stmt->error;
-            $status = 'error';    }
+            $status = 'error';    
+        }
 
     $stmt->close();
 } else {

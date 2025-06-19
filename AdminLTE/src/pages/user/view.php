@@ -21,8 +21,8 @@ if (!$user) {
     exit;
 }
 ?>
-<?php include('../../components/header.php'); ?>
-<?php include('../../components/sidebar.php'); ?>
+<?php include('../../header.php'); ?>
+<?php include('../../sidebar.php'); ?>
       <div class="container-fluid mb-2">
         <div class="row">
           <div class="col-sm-6"><h1>User Details</h1></div>
@@ -41,10 +41,9 @@ if (!$user) {
           <div class="card-header"><h3 class="card-title">Profile Info</h3></div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-3 text-center justify-content-center m-auto">
-                <img src="<?= htmlspecialchars(!empty($user['image_path']) && file_exists($user['image_path']) ? $user['image_path'] : 'uploads/default.png') ?>"
-                     class="img-fluid img-thumbnail mb-3" alt="Profile Image">
-              </div>
+            <div class="col-md-3 text-center justify-content-center m-auto">
+            <img src="./<?= (!empty($user['image_path']) && file_exists($user['image_path']) ? $user['image_path'] : '../../assets/img/profile.png') ?>" alt="Profile" class="img-thumbnail mt-1 shadow-lg" style="height: 80px; width:auto;">
+            </div>
               <div class="col-md-9">
                 <table class="table table-sm">
                   <tbody>
@@ -75,7 +74,7 @@ if (!$user) {
             </div>
           </div>
           <div class="card-footer">
-            <a href="User_edit.php?id=<?= $user['id'] ?>" class="btn btn-warning btn-sm">
+            <a href="edit.php?id=<?= $user['id'] ?>" class="btn btn-warning btn-sm">
               <i class="fas fa-edit mr-1"></i> Edit
             </a>
           </div>
@@ -84,5 +83,5 @@ if (!$user) {
     </section>
   </div>
 
-  <?php include('../../components/footer.php'); ?>
+  <?php include('../../footer.php'); ?>
 

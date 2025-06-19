@@ -1,23 +1,21 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 $formData = $_SESSION['formData'] ?? [];
 $errors = $_SESSION['errors'] ?? [];
 $status = $_SESSION['status'] ?? '';
 $message = $_SESSION['message'] ?? '';
-
-unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION['message']);
-
-
-
 ?>
 <?php
-include('../../components/header.php');
-include('../../components/sidebar.php');
+include('../../header.php');
+include('../../sidebar.php');
 ?>
 
-<!-- <?php
-            if (isset($_SESSION['user_name'])) {
-            ?> -->
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6"><h1 class="m-0">Add New User</h1></div>
@@ -35,8 +33,10 @@ include('../../components/sidebar.php');
       <div class="container-fluid">
         <div class="card card-primary">
           <div class="card-header"><h3 class="card-title">Add User</h3></div>
-
-          <form id="userForm" action="User_addAction.php" method="post" enctype="multipart/form-data">
+          <?php
+            if (isset($_SESSION['user_name'])) {
+           ?>
+          <form id="userForm" action="createAction.php" method="post" enctype="multipart/form-data">
             <div class="card-body">
 
               <div class="row">
@@ -93,25 +93,24 @@ include('../../components/sidebar.php');
 
               <div class="row">
               <div class="form-group col-md-6">
-                  <label for="reservationdate">Date of Birth <span class="text-danger">*</span></label>
-                  <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                    <input
-                      type="text"
-                      class="form-control datetimepicker-input"
-                      data-target="#reservationdate"
-                      id="DOB"
-                      name="DOB"
-                      value="<?= htmlspecialchars($formData['DOB'] ?? '') ?>"
-                      placeholder="Select Date of Birth"
-                      autocomplete="off"
-                    />
-                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker" style="cursor:pointer;">
-                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
+                <label for="dateofbirth">Date of Birth <span class="text-danger">*</span></label>
+                <div class="input-group date" id="dateofbirth" data-target-input="nearest">
+                  <input
+                    type="text"
+                    class="form-control datetimepicker-input"
+                    data-target="#dateofbirth"
+                    id="DOB"
+                    name="DOB"
+                    value="<?= htmlspecialchars($formData['DOB'] ?? '') ?>"
+                    placeholder="Select Date of Birth"
+                    autocomplete="off"
+                  />
+                  <div class="input-group-append" data-target="#dateofbirth" data-toggle="datetimepicker" style="cursor:pointer;">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
                 </div>
-
-                <div class="form-group col-md-6">
+              </div>
+              <div class="form-group col-md-6">
                   <label for="image_path">Profile Image <span class="text-danger">*</span></label>
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="image_path" name="image_path" accept="image/*">
@@ -191,111 +190,168 @@ include('../../components/sidebar.php');
               <button type="submit" name="submit" class="btn btn-primary float-right">Add User</button>
             </div>
           </form>
+
+          <?php
+            } else {
+              echo "<div class='alert alert-warning' style='min-height: 100px; margin-top:10px;'>Please log in to view the user list.<br><a href='../login.php' class='btn btn-primary' style='text-decoration:none;'>Login</a></div>";
+            }
+?>
         </div>
       </div>
 
-<!-- JS Scripts -->
+
+      <?php
+unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION['message']);
+?>
+
+<?php include('../../footer.php'); ?>
+
+
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="../../plugins/jquery-validation/additional-methods.min.js"></script>
+<script src="../../plugins/moment/moment.min.js"></script>
+<script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
 <script>
     $(function () {
-        // Custom filesize validation method (max 2MB)
-        $.validator.addMethod('filesize', function (value, element, param) {
-            if (element.files.length === 0) return true; // No file selected = valid (handle 'required' separately)
-            return element.files[0].size <= param;
-        }, 'File size must be less than {0} bytes.');
+      $.validator.addMethod('pattern', function(value, element, param) {
+        return this.optional(element) || param.test(value);
+      }, 'Invalid format.');
 
-        $('#userForm').validate({
-            rules: {
-                first_name: { required: true, minlength: 3 },
-                last_name: { minlength: 3 },
-                email: { required: true, email: true },
-                phone_no: { required: true, digits: true, minlength: 10, maxlength: 10 },
-                password: { required: true, minlength: 8 },
-                confirm_password: { required: true, equalTo: '#password' },
-                DOB: { required: true, date: true },
-                gender: { required: true },
-                'hobby[]': { required: true, minlength: 1 },
-                address: { required: true, minlength: 10 },
-                country: { required: true },
-                image_path: {
-                    required: true,
-                    extension: "jpg|jpeg|png|gif",
-                    filesize: 2097152 // 2MB
-                }
-            },
-            messages: {
-                first_name: {
-                    required: "Please enter your first name",
-                    minlength: "Minimum 3 characters"
-                },
-                last_name: {
-                    minlength: "Minimum 3 characters"
-                },
-                email: "Please enter a valid email address",
-                phone_no: {
-                    required: "Please enter your phone number",
-                    digits: "Only digits allowed",
-                    minlength: "Must be 10 digits",
-                    maxlength: "Must be 10 digits"
-                },
-                password: {
-                    required: "Please provide a password",
-                    minlength: "Minimum 8 characters"
-                },
-                confirm_password: {
-                    required: "Please confirm your password",
-                    equalTo: "Passwords do not match"
-                },
-                DOB: "Please select your date of birth",
-                gender: "Please select a gender",
-                'hobby[]': "Please select at least one hobby",
-                address: {
-                    required: "Please enter your address",
-                    minlength: "At least 10 characters required"
-                },
-                country: "Please select your country",
-                image_path: {
-                    required: "Please upload a profile image",
-                    extension: "Only JPG, JPEG, PNG, or GIF allowed",
-                    filesize: "File must be under 2MB"
-                }
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                if (element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
-                    element.closest('.form-group').append(error);
-                } else if (element.hasClass('custom-file-input')) {
-                    element.closest('.custom-file').append(error);
-                } else {
-                    element.closest('.form-group').append(error);
-                }
-            },
-            highlight: function (element) {
-                $(element).addClass('is-invalid').removeClass('is-valid');
-                // For custom file input, highlight input
-                if ($(element).hasClass('custom-file-input')) {
-                    $(element).siblings('.custom-file-label').addClass('is-invalid').removeClass('is-valid');
-                }
-            },
-            unhighlight: function (element) {
-                $(element).removeClass('is-invalid').addClass('is-valid');
-                if ($(element).hasClass('custom-file-input')) {
-                    $(element).siblings('.custom-file-label').removeClass('is-invalid').addClass('is-valid');
-                }
-            }
-        });
+      $('#userForm').validate({
+        rules: {
+          first_name: { 
+            required: true, 
+            minlength: 3, 
+            pattern: /^[A-Za-z\s'-]+$/ 
+          },
+          last_name: { 
+            minlength: 3,
+            pattern: /^[A-Za-z\s'-]+$/
+          },
+          email: { 
+            required: true, 
+            email: true,
+          },
+          phone_no: { 
+            required: true, 
+            digits: true, 
+            minlength: 10, 
+            maxlength: 10,
+              pattern: /^[6-9]\d{9}$/
+          },
+          password: {
+            required: true,
+            minlength: 8,
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+          },
+          confirm_password: { 
+            required: true, 
+            equalTo: '#password' 
+          },
+          DOB: { 
+            required: true, 
+            date: true 
+          },
+          gender: { 
+            required: true 
+          },
+          'hobby[]': { 
+            required: true, 
+            minlength: 1 
+          },
+          address: { 
+            required: true, 
+            minlength: 10,
+            pattern: /^[A-Za-z0-9\s,.'-]{10,}$/
+          },
+          country: { 
+            required: true 
+          },
+          image_path: {
+            required: true,
+            extension: "jpg|jpeg|png|gif",
+            filesize: 2097152 
+          }
+        },
+        messages: {
+          first_name: {
+            required: "Please enter your first name",
+            minlength: "Minimum 3 characters",
+            pattern: "First name can contain letters, spaces, apostrophes, and hyphens only."
+          },
+          last_name: {
+            minlength: "Minimum 3 characters",
+            pattern: "Last name can contain letters, spaces, apostrophes, and hyphens only."
+          },
+          email: "Please enter a valid email address",
+          phone_no: {
+            required: "Please enter your phone number",
+            digits: "Only digits allowed",
+            minlength: "Must be 10 digits",
+            maxlength: "Must be 10 digits",
+            pattern: "Phone number must be exactly 10 digits."
+          },
+          password: {
+            required: "Please provide a password",
+            minlength: "Minimum 8 characters",
+            pattern: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+          },
+          confirm_password: {
+            required: "Please confirm your password",
+            equalTo: "Passwords do not match"
+          },
+          DOB: "Please select your date of birth",
+          gender: "Please select a gender",
+          'hobby[]': "Please select at least one hobby",
+          address: {
+            required: "Please enter your address",
+            minlength: "At least 10 characters required",
+            pattern: "Address contains invalid characters."
+          },
+          country: "Please select your country",
+          image_path: {
+            required: "Please upload a profile image",
+            extension: "Only JPG, JPEG, PNG, or GIF allowed",
+            filesize: "File must be under 2MB"
+          }
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function(element) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+          $(element).removeClass('is-invalid').addClass('is-valid');
+        }
+      });
+      $('#dateofbirth').datetimepicker({
+    format: 'YYYY-MM-DD',
+    useCurrent: false,
+    maxDate: moment().subtract(18, 'years'),
+    minDate: moment().subtract(100, 'years'),
+    icons: {
+      time: 'far fa-clock',
+      date: 'far fa-calendar',
+      up: 'fas fa-chevron-up',
+      down: 'fas fa-chevron-down',
+      previous: 'fas fa-chevron-left',
+      next: 'fas fa-chevron-right',
+      today: 'far fa-calendar-check',
+      clear: 'far fa-trash-alt',
+      close: 'fas fa-times'
+    }
+});
 
-        $('#reservationdate').datetimepicker({
-        format: 'L'
-    });
-
-
-
-        // Update custom file input label text on file select
-        $('.custom-file-input').on('change', function () {
-            var fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').html(fileName);
-        });
+      $('.custom-file-input').on('change', function () {
+          var fileName = $(this).val().split('\\').pop();
+          $(this).next('.custom-file-label').html(fileName);
+      });
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -333,13 +389,3 @@ include('../../components/sidebar.php');
 </script>
 <?php endif; ?>
 
-<?php
-            } else {
-              session_start();
-              $_SESSION['message'] = 'You must be logged in to access this page.';
-              $_SESSION['status'] = 'error';
-              header("Location: login.php");
-              exit();
-            }
-            ?>
-<?php include('../../components/footer.php'); ?>
