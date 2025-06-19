@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once('../config/config.php');
+require_once('../../../config/config.php');
 
 if (!isset($_GET['id'])) {
     header('Location: index.php');
@@ -21,23 +21,13 @@ if (!$user) {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <?php include('./components/head.html'); ?>
-</head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-  <?php include('./components/navbar.html'); ?>
-  <?php include('./components/sidebar.html'); ?>
-
-  <div class="content-wrapper">
-    <section class="content-header">
+<?php include('../../components/header.php'); ?>
+<?php include('../../components/sidebar.php'); ?>
       <div class="container-fluid mb-2">
         <div class="row">
           <div class="col-sm-6"><h1>User Details</h1></div>
           <div class="col-sm-6 text-sm-right">
-            <a href="User_index.php" class="btn btn-secondary btn-sm">
+            <a href="index.php" class="btn btn-secondary btn-sm">
               <i class="fas fa-arrow-left mr-1"></i> Back to List
             </a>
           </div>
@@ -58,20 +48,25 @@ if (!$user) {
               <div class="col-md-9">
                 <table class="table table-sm">
                   <tbody>
-                    <tr><th>Full Name</th><td><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></td></tr>
-                    <tr><th>Email</th><td><?= htmlspecialchars($user['email']) ?></td></tr>
-                    <tr><th>Phone</th><td><?= htmlspecialchars($user['phone_no']) ?></td></tr>
-                    <tr><th>DOB</th><td><?= htmlspecialchars($user['DOB']) ?></td></tr>
+                    <tr><th>Full Name</th><td>
+                    <?= (!empty($user['first_name']) && !empty($user['last_name']))
+                        ? htmlspecialchars(trim($user['first_name'] . ' ' . $user['last_name']))
+                        : 'N/A' ?>
+                  </td></tr>
+                    <tr><th>Email</th><td><?= !empty($user['email']) ? htmlspecialchars($user['email']) : 'N/A' ?></td>
+                    </tr>
+                    <tr><th>Phone</th><td><?= !empty($user['phone_no']) ? htmlspecialchars($user['phone_no']) : 'N/A' ?></td></tr>
+                    <tr><th>DOB</th><td><?= !empty($user['DOB']) ? htmlspecialchars($user['DOB']) : 'N/A' ?></td></tr>
                     <tr><th>Gender</th><td>
                       <span class="badge <?= $user['gender'] === 'male' ? 'badge-primary' : ($user['gender'] === 'female' ? 'badge-warning' : 'badge-secondary') ?>">
-                        <?= htmlspecialchars(ucfirst($user['gender'])) ?>
+                        <?= !empty($user['gender']) ? htmlspecialchars(ucfirst($user['gender'])) : 'N/A'?>
                       </span>
                     </td></tr>
-                    <tr><th>Address</th><td><?= nl2br(htmlspecialchars($user['address'])) ?></td></tr>
-                    <tr><th>Country</th><td><?= strtoupper(htmlspecialchars($user['country'])) ?></td></tr>
+                    <tr><th>Address</th><td><?= !empty($user['address']) ? nl2br(htmlspecialchars($user['address'])) : 'N/A' ?></td></tr>
+                    <tr><th>Country</th><td><?= !empty($user['country']) ? strtoupper(htmlspecialchars($user['country'])) : 'N/A' ?></td></tr>
                     <tr><th>Hobbies</th><td>
-                      <?php foreach (explode(',', $user['hobby']) as $h): ?>
-                        <span class="badge badge-info mr-1"><?= htmlspecialchars(trim($h)) ?></span>
+                      <?php foreach (!empty($user['hobby']) ? explode(',', $user['hobby']) : [] as $hobby):  ?>
+                        <span class="badge badge-info mr-1"><?= !empty(trim($hobby)) ? htmlspecialchars(trim($hobby)) : 'N/A' ?></span>
                       <?php endforeach; ?>
                     </td></tr>
                   </tbody>
@@ -89,8 +84,5 @@ if (!$user) {
     </section>
   </div>
 
-  <?php include('./components/footer.php'); ?>
-</div>
-<?php include('./components/scripts.html'); ?>
-</body>
-</html>
+  <?php include('../../components/footer.php'); ?>
+

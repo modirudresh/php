@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../config/config.php');
+require("../../../config/config.php");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Redirect immediately to index page
-    header('Location: ./User_index.php');
+    header('Location: ./index.php');
     exit();
 }
 ?>

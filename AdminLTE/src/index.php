@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
 <?php include('./components/head.html'); ?>
 
+</head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -11,7 +12,7 @@
 <?php include('./components/preload.html'); ?>
 
 <!-- Navbar -->
-<?php include('./components/navbar.html'); ?>
+<?php include('./components/navbar.php'); ?>
   <!-- Navbar -->
 <!-- Main Sidebar Container -->
 <?php include('./components/sidebar.html'); ?>

@@ -6,19 +6,18 @@ $status = $_SESSION['status'] ?? '';
 $message = $_SESSION['message'] ?? '';
 
 unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION['message']);
+
+
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
+<?php
+include('../../components/header.php');
+include('../../components/sidebar.php');
+?>
 
-<?php include('./components/head.html'); ?>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-
-  <?php include('./components/navbar.html'); ?>
-  <?php include('./components/sidebar.html'); ?>
-
-  <div class="content-wrapper">
-    <div class="content-header">
+<!-- <?php
+            if (isset($_SESSION['user_name'])) {
+            ?> -->
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6"><h1 class="m-0">Add New User</h1></div>
@@ -73,7 +72,7 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
                     class="form-control"
                     id="phone_no"
                     name="phone_no"
-                    autocomplete="off"
+                    autocomplete="new-phone"
                     value="<?= htmlspecialchars($formData['phone_no'] ?? '') ?>"
                     placeholder="Enter 10-digit number"
                     maxlength="10"
@@ -100,9 +99,9 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
                       type="text"
                       class="form-control datetimepicker-input"
                       data-target="#reservationdate"
-                      id="reservationdateInput"
-                      name="reservationdate"
-                      value="<?= htmlspecialchars($formData['reservationdate'] ?? '') ?>"
+                      id="DOB"
+                      name="DOB"
+                      value="<?= htmlspecialchars($formData['DOB'] ?? '') ?>"
                       placeholder="Select Date of Birth"
                       autocomplete="off"
                     />
@@ -188,26 +187,14 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
             </div>
 
             <div class="card-footer">
-              <button type="button" class="btn btn-secondary" onclick="window.location.href='User_index.php'">Cancel</button>
+              <button type="button" class="btn btn-secondary" onclick="window.location.href='index.php'">Cancel</button>
               <button type="submit" name="submit" class="btn btn-primary float-right">Add User</button>
             </div>
           </form>
         </div>
       </div>
-    </section>
-  </div>
 
-<?php include('./components/footer.php'); ?>
-</div>
-
-<?php include('./components/scripts.html'); ?>
 <!-- JS Scripts -->
-<script src="./plugins/jquery/jquery.min.js"></script>
-<script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="./plugins/jquery-validation/jquery.validate.min.js"></script>
-<script src="./plugins/jquery-validation/additional-methods.min.js"></script>
-<script src="./plugins/moment/moment.min.js"></script>
-<script src="./plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <script>
     $(function () {
         // Custom filesize validation method (max 2MB)
@@ -310,9 +297,7 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
             $(this).next('.custom-file-label').html(fileName);
         });
     });
-</script>
 
-<script>
     document.addEventListener('DOMContentLoaded', function () {
         const selectedCountry = "<?= htmlspecialchars($formData['country'] ?? '') ?>";
         const countrySelect = document.querySelector('select[name="country"]');
@@ -321,8 +306,6 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
         }
     });
 </script>
-
-
 
 <style>
   .is-valid { border: 2px solid #28a745; }
@@ -350,5 +333,13 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
 </script>
 <?php endif; ?>
 
-</body>
-</html>
+<?php
+            } else {
+              session_start();
+              $_SESSION['message'] = 'You must be logged in to access this page.';
+              $_SESSION['status'] = 'error';
+              header("Location: login.php");
+              exit();
+            }
+            ?>
+<?php include('../../components/footer.php'); ?>

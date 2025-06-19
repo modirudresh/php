@@ -1,28 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<?php include('./components/head.html'); ?>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-
-  <!-- Preloader -->
-  <?php include('./components/preload.html'); ?>
-
-
-<!-- Navbar -->
-  <?php include('./components/navbar.html'); ?>
-  <!-- Navbar -->
-
-  <!-- Main Sidebar Container -->
-   <?php   include('./components/sidebar.html');   ?>
-  <!-- Main Sidebar Container -->
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
+<?php include('../components/header.php'); ?>
+<?php include('../components/sidebar.php'); ?>
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0">Dashboard</h1>
+            welcome to the admin dashboard
+            <?php
+            if (isset($_SESSION['user_name'])) {
+              echo "<p class='text-muted'>Hello, " . htmlspecialchars($_SESSION['user_name']) . "!</p>";
+            } else {
+              echo "<p class='text-muted'>Please log in to access your dashboard.</p>";
+            }
+            ?>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -108,12 +96,4 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
- <!-- Footer -->
-  <?php  include('./components/footer.html');    ?>
-  <!-- Footer -->
-</div>
-<!-- ./wrapper -->
-<?php include('./components/scripts.html'); ?>
-
-</body>
-</html>
+<?php include('../components/footer.php'); ?>
