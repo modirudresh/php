@@ -68,19 +68,43 @@ error_reporting(E_ALL);
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="index.php" class="nav-link">
+                            <a href="../student/index.php" class="nav-link">
                                 <i class="fas fa-list-alt nav-icon"></i>
                                 <p> Manage Students </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="create.php" class="nav-link">
+                            <a href="../student/create.php" class="nav-link">
                                 <i class="fas fa-user-plus nav-icon"></i>
                                 <p>Add New Student</p>
                             </a>
                         </li>
                     </ul>
-                  </li>
+                </li>
+
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link ">
+                        <i class="nav-icon fas fa-users-cog"></i>
+                        <p>
+                            User Administration
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="../user/index.php" class="nav-link">
+                                <i class="fas fa-list-alt nav-icon"></i>
+                                <p> Manage User </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../user/create.php" class="nav-link">
+                                <i class="fas fa-user-plus nav-icon"></i>
+                                <p>Add New User</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
       </nav>
       <!-- /.sidebar-menu -->
