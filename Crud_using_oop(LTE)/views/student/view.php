@@ -27,28 +27,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>View Student</title>
-    <!-- Add Bootstrap/AdminLTE CSS as needed -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h2>View Student Details</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4">View Student Details</h2>
 
         <?php if ($student): ?>
-            <ul>
-                <li><strong>ID:</strong> <?= htmlspecialchars($student['id']) ?></li>
-                <li><strong>Name:</strong> <?= htmlspecialchars($student['firstname']) ?> <?= htmlspecialchars($student['lastname']) ?></li>
-                <li><strong>Email:</strong> <?= htmlspecialchars($student['email']) ?></li>
-                <!-- Add more fields as needed -->
-            </ul>
+            <div class="card shadow">
+                <div class="card-body align-items-center">
+                    <h4 class="card-title mb-2"><?= htmlspecialchars($student['firstname']) ?> <?= htmlspecialchars($student['lastname']) ?></h4>
+                    <p class="card-text"><strong>Email:</strong> <?= htmlspecialchars($student['email']) ?></p>
+                    <p class="card-text"><strong>Contact Number:</strong> <?= htmlspecialchars($student['contactno']) ?></p>
+                    <p class="card-text"><strong>Address:</strong> <?= htmlspecialchars($student['address']) ?></p>
+                </div>
+            </div>
         <?php endif; ?>
 
-        <a href="index.php" class="btn btn-secondary">Back</a>
+        <a href="index.php" class="btn btn-secondary mt-3">Back</a>
     </div>
 </body>
 </html>

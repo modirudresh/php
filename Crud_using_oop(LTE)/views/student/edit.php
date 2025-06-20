@@ -72,46 +72,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
-    <h2>Update Student</h2>
+<div class="card ">
 
+<div class="card-header">
+<h2>Update Student</h2>
+</div>
     <?php if (!empty($error)): ?>
         <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
-
+<div class="card-body">
     <form action="edit.php" method="post">
         <input type="hidden" name="id" value="<?= htmlspecialchars($student['id'] ?? '') ?>" />
 
-        <div class="mb-3">
+        <div class="row">
+        <div class="col-md-6 mb-3">
             <label>First Name</label>
             <input type="text" name="firstname" class="form-control"
                    value="<?= htmlspecialchars($_POST['firstname'] ?? $student['firstname'] ?? '') ?>" required>
         </div>
 
-        <div class="mb-3">
+        <div class="col-md-6 mb-3">
             <label>Last Name</label>
             <input type="text" name="lastname" class="form-control"
                    value="<?= htmlspecialchars($_POST['lastname'] ?? $student['lastname'] ?? '') ?>" required>
         </div>
-
-        <div class="mb-3">
+    </div>
+    <div class="row">
+    <div class="col-md-6 mb-3">
             <label>Email</label>
             <input type="email" name="email" class="form-control"
                    value="<?= htmlspecialchars($_POST['email'] ?? $student['email'] ?? '') ?>" required>
         </div>
 
-        <div class="mb-3">
+        <div class="col-md-6 mb-3">
             <label>Contact No</label>
             <input type="text" name="contactno" class="form-control"
                    value="<?= htmlspecialchars($_POST['contactno'] ?? $student['contactno'] ?? '') ?>" required>
         </div>
-
+    </div>
         <div class="mb-3">
             <label>Address</label>
             <textarea name="address" class="form-control" required><?= htmlspecialchars($_POST['address'] ?? $student['address'] ?? '') ?></textarea>
         </div>
-
+    </div>
+    <div class="card-footer">
+    <div class="float-end">
+        <a href="index.php" class="btn btn-secondary">Cancel</a>
         <button type="submit" class="btn btn-warning">Update</button>
+    </div>
+    </div>
     </form>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

@@ -1,8 +1,7 @@
 <?php
 namespace Controllers;
 
-require_once __DIR__ . '/../Models/Student.php'; // Required if not using autoloader
-
+include_once __DIR__ . '/../Models/Student.php'; 
 use Models\Student;
 
 class StudentController {
@@ -18,7 +17,7 @@ class StudentController {
     }
 
     public function addStudent($firstname, $lastname, $email, $contactNo, $address) {
-        return $this->student->create($firstname, $lastname, $email, $contactNo, $address);
+        return $this->student->create($firstname, $lastname, $email, '', $contactNo, $address); // Pass empty image_path
     }
 
     public function editStudent($id, $firstname, $lastname, $email, $contactNo, $address) {
@@ -33,5 +32,7 @@ class StudentController {
         return $this->student->readById($id);
     }
 
+    public function markAttendance($student_id, $attendance_date, $status) {
+        return $this->student->markAttendance($student_id, $attendance_date, $status);
+    }
 }
-?>

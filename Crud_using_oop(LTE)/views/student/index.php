@@ -25,18 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
 }
 
 $students = $controller->index();
+include_once("../header.php");
+include_once("../sidebar.php");
 ?>
+<div class="container-fluid">
+  <div class="row mb-2">
+  <div class="col-sm-6">
+  <h1 class="m-0">Add New Student</h1>
+    </div><!-- /.col -->
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+        <li class="breadcrumb-item active">Student list</li>
+      </ol>
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Student List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container mt-4">
-
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
 <?php if (isset($_SESSION['success'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <?= htmlspecialchars($_SESSION['success']) ?>
@@ -51,23 +61,29 @@ $students = $controller->index();
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
 
-
-    <h2>Student List</h2>
-    <a href="create.php" class="btn btn-primary mb-3">Add New Student</a>
-
-    <table class="table table-bordered">
-        <thead class="table-dark">
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <h2 class="col-md-9 m-auto pl-4" ></h2>
+            <a href="create.php" class="btn btn-primary px-4 col-md-3 m-auto">Add New Student</a>
+        </div>
+    </div>
+<div class="card-body">
+    <table class="table table-bordred table-striped">
+        <thead class="table-dark text-center">
             <tr>
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
+                <th>Image</th>
                 <th>Contact No</th>
                 <th>Address</th>
+                <!-- <th></th> -->
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="text-justify">
             <?php if (!empty($students)): ?>
                 <?php foreach ($students as $student): ?>
                     <tr>
@@ -75,8 +91,10 @@ $students = $controller->index();
                         <td><?= htmlspecialchars($student['firstname'] ?? '') ?></td>
                         <td><?= htmlspecialchars($student['lastname'] ?? '') ?></td>
                         <td><?= htmlspecialchars($student['email'] ?? '') ?></td>
+                        <td><img src="<?= !empty($student['image_path']) ? htmlspecialchars($student['image_path']) : '../../uploads/default.png' ?>" style="width:50px; height:auto;" alt="profile"></td>
                         <td><?= htmlspecialchars($student['contactno'] ?? '') ?></td>
                         <td><?= htmlspecialchars($student['address'] ?? '') ?></td>
+                        <!-- <td><a href="attendance.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-success">Add attendance</a></td> -->
                         <td>
                         <a href="view.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-info">View</a>
                         <a href="edit.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
@@ -92,6 +110,19 @@ $students = $controller->index();
             <?php endif; ?>
         </tbody>
     </table>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+   </div>
+   <div class="card-footer">
+   </div>
+</div>
+
+     
+</div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+<?php
+include_once("../footer.php");?>
+
