@@ -67,24 +67,23 @@ include('../../sidebar.php');
                 </div>
                 <div class="form-group col-md-6">
                   <label for="phone_no">Phone Number <span class="text-danger">*</span></label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="phone_no"
-                    name="phone_no"
-                    autocomplete="new-phone"
-                    value="<?= htmlspecialchars($formData['phone_no'] ?? '') ?>"
-                    placeholder="Enter 10-digit number"
-                    maxlength="10"
-                  >
+                  <input type="text" class="form-control" id="phone_no" name="phone_no" autocomplete="new-phone" value="<?= htmlspecialchars($formData['phone_no'] ?? '') ?>" oninput="this.value = this.value.replace(/\D/g, '')" placeholder="Enter 10-digit number" maxlength="10">
                 </div>
               </div>
 
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="password">Password <span class="text-danger">*</span></label>
-                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" autocomplete="new-password">
+                  <div class="input-group">
+                    <input type="password" class="form-control password" id="password" name="password" placeholder="Enter password" autocomplete="new-password">
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                      <span class="fa fa-eye toggle icon" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div class="form-group col-md-6">
                   <label for="confirm_password">Confirm Password <span class="text-danger">*</span></label>
                   <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter password">
@@ -240,7 +239,7 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
             digits: true, 
             minlength: 10, 
             maxlength: 10,
-              pattern: /^[6-9]\d{9}$/
+            pattern: /^[6-9]\d{9}$/
           },
           password: {
             required: true,
@@ -292,7 +291,7 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
             digits: "Only digits allowed",
             minlength: "Must be 10 digits",
             maxlength: "Must be 10 digits",
-            pattern: "Phone number must be exactly 10 digits."
+            pattern: "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9."
           },
           password: {
             required: "Please provide a password",
@@ -362,11 +361,25 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
         }
     });
 </script>
-
 <style>
   .is-valid { border: 2px solid #28a745; }
   .is-invalid { border: 2px solid #dc3545; }
 </style>
+
+<script>
+    const toggle = document.querySelector(".toggle"),
+        input = document.querySelector(".password");
+
+    toggle.addEventListener("click", () => {
+        if (input.type === "password") {
+            input.type = "text";
+            toggle.classList.replace("fa-eye-slash", "fa-eye");
+        } else {
+            input.type = "password";
+            toggle.classList.replace("fa-eye", "fa-eye-slash");
+        }
+    });
+  </script>
 <?php if (!empty($message)) : ?>
 <script>
     $(function () {
@@ -388,4 +401,5 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
     });
 </script>
 <?php endif; ?>
+
 

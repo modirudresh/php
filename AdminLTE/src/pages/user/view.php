@@ -47,27 +47,50 @@ if (!$user) {
               <div class="col-md-9">
                 <table class="table table-sm">
                   <tbody>
-                    <tr><th>Full Name</th><td>
-                    <?= (!empty($user['first_name']) && !empty($user['last_name']))
-                        ? htmlspecialchars(trim($user['first_name'] . ' ' . $user['last_name']))
-                        : 'N/A' ?>
-                  </td></tr>
-                    <tr><th>Email</th><td><?= !empty($user['email']) ? htmlspecialchars($user['email']) : 'N/A' ?></td>
+                    <tr>
+                      <th>Full Name</th>
+                      <td>
+                      <?= (!empty($user['first_name']) && !empty($user['last_name']))
+                          ? htmlspecialchars(trim($user['first_name'] . ' ' . $user['last_name']))
+                          : 'N/A' ?>
+                      </td>
                     </tr>
-                    <tr><th>Phone</th><td><?= !empty($user['phone_no']) ? htmlspecialchars($user['phone_no']) : 'N/A' ?></td></tr>
-                    <tr><th>DOB</th><td><?= !empty($user['DOB']) ? htmlspecialchars($user['DOB']) : 'N/A' ?></td></tr>
-                    <tr><th>Gender</th><td>
-                      <span class="badge <?= $user['gender'] === 'male' ? 'badge-primary' : ($user['gender'] === 'female' ? 'badge-warning' : 'badge-secondary') ?>">
-                        <?= !empty($user['gender']) ? htmlspecialchars(ucfirst($user['gender'])) : 'N/A'?>
-                      </span>
-                    </td></tr>
-                    <tr><th>Address</th><td><?= !empty($user['address']) ? nl2br(htmlspecialchars($user['address'])) : 'N/A' ?></td></tr>
-                    <tr><th>Country</th><td><?= !empty($user['country']) ? strtoupper(htmlspecialchars($user['country'])) : 'N/A' ?></td></tr>
-                    <tr><th>Hobbies</th><td>
-                      <?php foreach (!empty($user['hobby']) ? explode(',', $user['hobby']) : [] as $hobby):  ?>
-                        <span class="badge badge-info mr-1"><?= !empty(trim($hobby)) ? htmlspecialchars(trim($hobby)) : 'N/A' ?></span>
-                      <?php endforeach; ?>
-                    </td></tr>
+                    <tr>
+                      <th>Email</th>
+                      <td><?= !empty($user['email']) ? htmlspecialchars($user['email']) : 'N/A' ?></td>
+                    </tr>
+                    <tr>
+                      <th>Phone</th>
+                      <td><?= !empty($user['phone_no']) ? htmlspecialchars($user['phone_no']) : 'N/A' ?></td>
+                    </tr>
+                    <tr>
+                      <th>DOB</th>
+                      <td><?= !empty($user['DOB']) ? date('d-M-Y', strtotime($user['DOB'])) : 'N/A' ?></td>
+                    </tr>
+                    <tr>
+                      <th>Gender</th>
+                      <td>
+                        <span class="badge <?= $user['gender'] === 'male' ? 'badge-primary' : ($user['gender'] === 'female' ? 'badge-warning' : 'badge-secondary') ?>">
+                          <?= !empty($user['gender']) ? htmlspecialchars(ucfirst($user['gender'])) : 'N/A'?>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Address</th>
+                      <td><?= !empty($user['address']) ? nl2br(htmlspecialchars($user['address'])) : 'N/A' ?></td>
+                    </tr>
+                    <tr>
+                      <th>Country</th>
+                      <td><?= !empty($user['country']) ? strtoupper(htmlspecialchars($user['country'])) : 'N/A' ?></td>
+                    </tr>
+                    <tr>
+                      <th>Hobbies</th>
+                      <td>
+                        <?php foreach (!empty($user['hobby']) ? explode(',', $user['hobby']) : [] as $hobby):  ?>
+                          <span class="badge badge-info mr-1"><?= !empty(trim($hobby)) ? htmlspecialchars(trim($hobby)) : 'N/A' ?></span>
+                        <?php endforeach; ?>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

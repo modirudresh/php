@@ -9,10 +9,9 @@ include('./Dashboard_sidebar.php');
   <div class="row mb-2">
   <div class="col-sm-6">
   <h1 class="m-0">Dashboard</h1>
-  <p>Welcome to the admin dashboard.</p>
   <?php if (isset($_SESSION['user_name'])): ?>
-    <p class="text-muted">Hello, <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong>! Glad to see you back.</p>
-  <?php else: ?>
+    <p>Welcome to the admin dashboard.</p>
+    <?php else: ?>
     <p class="text-muted">Please <a href="login.php">log in</a> to access your dashboard.</p>
   <?php endif; ?>
 </div><!-- /.col -->

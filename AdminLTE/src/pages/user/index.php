@@ -77,7 +77,7 @@ $result = mysqli_query($con, $sql);
                       <small class="badge badge-dark"><?= strtoupper($res['country']) ?></small>
                     <?php endif; ?>
                   </td>
-                  <td><?= !empty($res['DOB']) ? htmlspecialchars($res['DOB']) : 'N/A' ?></td>
+                  <td style="min-width: max-content;"><?= !empty($res['DOB']) ? date('d-m-Y', strtotime($res['DOB'])) : 'N/A' ?></td>
                   <td class="text-center">
                     <?php
                       if (!empty($res['phone_no'])) {
@@ -90,10 +90,10 @@ $result = mysqli_query($con, $sql);
                   </td>
                   <td class="text-center">
                     <?php
-                      $gender = strtolower($res['gender'] ?? '');
+                      $gender = ($res['gender'] ?? '');
                       echo match($gender) {
                         'male'   => "<span class='badge badge-primary'>Male</span>",
-                        'female' => "<span class='badge badge-pink'>Female</span>",
+                        'female' => "<span class='badge' style='background-color:pink;'>Female</span>",
                         'other'  => "<span class='badge badge-secondary'>Other</span>",
                         default  => "<span>N/A</span>"
                       };

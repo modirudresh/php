@@ -16,23 +16,23 @@ require_once('../../config/config.php');
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      
+      <?php            if (isset($_SESSION['user_name'])) {?>
+        <div class="user-panel mt-3 mb-3 d-flex">
         <div class="image">
         <?php if (!empty($res['image_path']) && file_exists(__DIR__ . '/user/' . $res['image_path'])): ?>
-          <img src="./user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
+          <img src="./user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:25px; border-radius:50%;">
         <?php else: ?>
           <img src="../assets/img/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
         <?php endif; ?>
         </div>
-        <?php
-            if (isset($_SESSION['user_name'])) {?>
                 <div class="info">
-              <a href="#" class="d-block">             <P>Hello, <strong><?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?></strong></p>              </a>              </div>
-              <?php            }else{}            ?>
-      </div>
+              <a href="#" class="d-block"><P>Hello, <strong><?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?></strong></p></a></div>
+            </div>
+              <?php }else{} ?>
 
       <!-- SidebarSearch Form -->
-      <div class="form-inline">
+      <div class="form-inline mt-3">
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
@@ -57,9 +57,7 @@ require_once('../../config/config.php');
                         </p>
                     </a>
                 </li>
-                <?php
-            if (isset($_SESSION['user_name'])) {
-           ?>  
+                <?php if (isset($_SESSION['user_name'])) { ?>  
                 <li class="nav-item menu-open">
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-users-cog"></i>
@@ -83,9 +81,7 @@ require_once('../../config/config.php');
                         </li>
                     </ul>
                   </li>
-                  <?php
-            } else {}
-              ?>
+                  <?php } else {} ?>
             </ul>
       </nav>
       <!-- /.sidebar-menu -->
