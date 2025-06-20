@@ -1,10 +1,34 @@
+<?php
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <?php include('./components/head.html'); ?>
-  <title>Forgot Password</title>
-  <link rel="stylesheet" href="./plugins/toastr/toastr.min.css">
-  <link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Log in (v2)</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      background-color: #f4f6f9;
+    }
+  </style>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -31,7 +55,7 @@
         </div>
       </form>
       <p class="mt-3 mb-1 float-right">
-        <a href="login.php">Back to Login</a>
+        <a href="login.php"><i class="fas fa-arrow-left mr-1"></i>Back to Login</a>
       </p>
     </div>
     <!-- /.login-card-body -->
@@ -39,7 +63,7 @@
 </div>
 
 <!-- /.login-box -->
-<?php include('./components/scripts.html'); ?>
+<?php include('../components/scripts.php'); ?>
 <script>
     $(function () {
   $.validator.addMethod('pattern', function (value, element, param) {
