@@ -1,0 +1,63 @@
+<?php
+namespace Models;
+
+include_once "../../Config/Database.php";
+
+use Config\Database;
+
+class Student {
+    // private $db;
+    private $connection;
+
+    public function __construct() {
+        $this->connection = new Database();
+        $this->connection = $this->connection->connect();
+    }
+
+    public function create($firstname, $lastname, $email, $contactno, $address) {
+        $sql = "INSERT INTO student (firstname, lastname, email, contactno, address) 
+                VALUES (:firstname, :lastname, :email, :contactno, :address)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':firstname', $firstname);
+        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':contactno', $contactno);
+        $stmt->bindParam(':address', $address);
+        return $stmt->execute();
+    }
+
+    public function update($id, $firstname, $lastname, $email, $contactno, $address) {
+        $sql = "UPDATE student SET firstname = :firstname, lastname = :lastname, email = :email, contactno = :contactno, address = :address WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':firstname', $firstname);
+        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':contactno', $contactno);
+        $stmt->bindParam(':address', $address);
+        return $stmt->execute();
+    }
+
+    public function delete($id) {
+        $sql = "DELETE FROM student WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
+
+    public function read() {
+        $sql = "SELECT * FROM student";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function readById($id) {
+        $sql = "SELECT * FROM student WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+}
+?>
