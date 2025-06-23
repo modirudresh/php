@@ -76,7 +76,6 @@ include_once("../sidebar.php");
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
-                <th>Image</th>
                 <th>Contact No</th>
                 <th>Address</th>
                 <!-- <th></th> -->
@@ -88,20 +87,43 @@ include_once("../sidebar.php");
                 <?php foreach ($students as $student): ?>
                     <tr>
                         <td><?= htmlspecialchars($student['id'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($student['firstname'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($student['lastname'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($student['first_name'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($student['last_name'] ?? '') ?></td>
                         <td><?= htmlspecialchars($student['email'] ?? '') ?></td>
-                        <td><img src="<?= !empty($student['image_path']) ? htmlspecialchars($student['image_path']) : '../../uploads/default.png' ?>" style="width:50px; height:auto;" alt="profile"></td>
-                        <td><?= htmlspecialchars($student['contactno'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($student['phone_no'] ?? '') ?></td>
                         <td><?= htmlspecialchars($student['address'] ?? '') ?></td>
                         <!-- <td><a href="attendance.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-success">Add attendance</a></td> -->
                         <td>
-                        <a href="view.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-info">View</a>
-                        <a href="edit.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                            <form method="post" action="index.php" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
-                                <input type="hidden" name="delete_id" value="<?= $student['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                        <a href="view.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>
+                        <a href="edit.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
+                          
+
+                        <!-- Delete Trigger -->
+                        <a href="#" class="btn btn-sm btn-danger" title="Delete User" aria-label="Delete User" data-bs-toggle="modal" data-bs-target="#deleteModal<?= htmlspecialchars($student['id']) ?>">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal<?= htmlspecialchars($student['id']) ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($student['id']) ?>" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="deleteModalLabel<?= htmlspecialchars($student['id']) ?>">Confirm Delete</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this record?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form method="post" action="index.php" style="display:inline;">
+                                            <input type="hidden" name="delete_id" value="<?= $student['id'] ?>">
+                                            <button type="submit" class="btn btn-md btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>

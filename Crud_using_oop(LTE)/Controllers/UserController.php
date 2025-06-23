@@ -1,7 +1,7 @@
 <?php
 namespace Controllers;
 
-include_once __DIR__ . '/../Models/user.php'; 
+include_once __DIR__ . '/../Models/User.php';
 use Models\User;
 
 class UserController {
@@ -16,23 +16,20 @@ class UserController {
         return $this->user->read();
     }
 
-    public function adduser($firstname, $lastname, $email, $contactNo, $address) {
-        return $this->user->create($firstname, $lastname, $email, '', $contactNo, $address); // Pass empty image_path
+    public function adduser($first_name, $last_name, $email, $phone_no, $address, $password, $gender, $DOB, $hobby, $country, $image_path) {
+        return $this->user->create($first_name, $last_name, $email, $image_path, $phone_no, $address, $password, $DOB, $gender, $hobby, $country);
     }
 
-    public function edituser($id, $firstname, $lastname, $email, $contactNo, $address) {
-        return $this->user->update($id, $firstname, $lastname, $email, $contactNo, $address);
+
+    public function edituser( $id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path = null ) {
+        return $this->user->update( $id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path );
     }
 
-    public function deleteuser($id) {
-        return $this->user->delete($id);
+    public function deleteuser( $id ) {
+        return $this->user->delete( $id );
     }
 
-    public function getuser($id) {
-        return $this->user->readById($id);
+    public function getuser( $id ) {
+        return $this->user->readById( $id );
     }
 }
-//     public function markAttendance($user_id, $attendance_date, $status) {
-//         return $this->user->markAttendance($user_id, $attendance_date, $status);
-//     }
-// }

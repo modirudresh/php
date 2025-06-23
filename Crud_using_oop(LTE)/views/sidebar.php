@@ -46,66 +46,70 @@ error_reporting(E_ALL);
       <!-- Sidebar Menu -->
       <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                <li class="nav-item">
-                    <a href="dashboard.php" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Dashboard
-                            <i class="right fas fa-angle-right"></i>
-                        </p>
-                    </a>
-                </li>
 
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-users-cog"></i>
-                        <p>
-                            Student Administration
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="../student/index.php" class="nav-link">
-                                <i class="fas fa-list-alt nav-icon"></i>
-                                <p> Manage Students </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../student/create.php" class="nav-link">
-                                <i class="fas fa-user-plus nav-icon"></i>
-                                <p>Add New Student</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+    <!-- Dashboard -->
+    <li class="nav-item">
+        <a href="dashboard.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+                Dashboard
+                <i class="right fas fa-angle-right"></i>
+            </p>
+        </a>
+    </li>
 
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link ">
-                        <i class="nav-icon fas fa-users-cog"></i>
-                        <p>
-                            User Administration
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="../user/index.php" class="nav-link">
-                                <i class="fas fa-list-alt nav-icon"></i>
-                                <p> Manage User </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../user/create.php" class="nav-link">
-                                <i class="fas fa-user-plus nav-icon"></i>
-                                <p>Add New User</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+    <!-- Student Administration -->
+    <li class="nav-item <?= (in_array(basename($_SERVER['PHP_SELF']), ['index.php', 'create.php']) && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'menu-open' : '' ?>">
+        <a href="#" class="nav-link <?= (in_array(basename($_SERVER['PHP_SELF']), ['index.php', 'create.php', 'view.php']) && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p>
+                Student Administration
+                <i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="../student/index.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>">
+                    <i class="fas fa-list-alt nav-icon"></i>
+                    <p>Manage Students</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../student/create.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'create.php' && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>">
+                    <i class="fas fa-user-plus nav-icon"></i>
+                    <p>Add New Student</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- User Administration -->
+    <li class="nav-item <?= (in_array(basename($_SERVER['PHP_SELF']), ['index.php', 'create.php']) && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'menu-open' : '' ?>">
+        <a href="#" class="nav-link <?= (in_array(basename($_SERVER['PHP_SELF']), ['index.php', 'create.php', 'view.php']) && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p>
+                User Administration
+                <i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="../user/index.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>">
+                    <i class="fas fa-list-alt nav-icon"></i>
+                    <p>Manage Users</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../user/create.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'create.php' && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>">
+                    <i class="fas fa-user-plus nav-icon"></i>
+                    <p>Add New User</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+</ul>
+
       </nav>
       <!-- /.sidebar-menu -->
     </div>

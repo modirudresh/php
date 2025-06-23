@@ -4,69 +4,107 @@ namespace Models;
 include_once "../../Config/Database.php";
 
 use Config\Database;
+use PDO;
 
 class User {
     private $connection;
 
     public function __construct() {
-        $this->connection = new Database();
-        $this->connection = $this->connection->connect();
+        $db = new Database();
+        $this->connection = $db->connect();
     }
 
-    public function create($firstname, $lastname, $email, $image_path, $contactno, $address) {
-        $sql = "INSERT INTO User (firstname, lastname, email, image_path, contactno, address) 
-                VALUES (:firstname, :lastname, :email, :image_path, :contactno, :address)";
+    public function create($first_name, $last_name, $email, $image_path, $phone_no, $address, $password, $DOB, $gender, $hobby, $country) {
+        if (is_array($hobby)) {
+            $hobby = implode(', ', $hobby);
+        }
+    
+        $formatted_dob = date('Y-m-d', strtotime($DOB));
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+    
+        $sql = "INSERT INTO `User` (first_name, last_name, email, image_path, phone_no, address, password, DOB, gender, hobby, country) 
+                VALUES (:first_name, :last_name, :email, :image_path, :phone_no, :address, :password, :DOB, :gender, :hobby, :country)";
+    
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':firstname', $firstname);
-        $stmt->bindParam(':lastname', $lastname);
+    
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':image_path', $image_path);
-        $stmt->bindParam(':contactno', $contactno);
+        $stmt->bindParam(':phone_no', $phone_no);
         $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':password', $hashed_password);
+        $stmt->bindParam(':DOB', $formatted_dob);
+        $stmt->bindParam(':gender', $gender);
+        $stmt->bindParam(':hobby', $hobby);
+        $stmt->bindParam(':country', $country);
+    
         return $stmt->execute();
     }
+    
 
-    public function update($id, $firstname, $lastname, $email, $contactno, $address) {
-        $sql = "UPDATE User SET firstname = :firstname, lastname = :lastname, email = :email, contactno = :contactno, address = :address WHERE id = :id";
+    public function update($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path = null) {
+        if (is_array($hobby)) {
+            $hobby = implode(', ', $hobby);
+        }
+
+        $formatted_dob = date('Y-m-d', strtotime($DOB));
+
+        $sql = "UPDATE `User` SET 
+                    first_name = :first_name,
+                    last_name = :last_name,
+                    email = :email,
+                    phone_no = :phone_no,
+                    address = :address,
+                    DOB = :DOB,
+                    gender = :gender,
+                    hobby = :hobby,
+                    country = :country";
+
+        if (!empty($image_path)) {
+            $sql .= ", image_path = :image_path";
+        }
+
+        $sql .= " WHERE id = :id";
+
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':firstname', $firstname);
-        $stmt->bindParam(':lastname', $lastname);
+
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':contactno', $contactno);
+        $stmt->bindParam(':phone_no', $phone_no);
         $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':DOB', $formatted_dob);
+        $stmt->bindParam(':gender', $gender);
+        $stmt->bindParam(':hobby', $hobby);
+        $stmt->bindParam(':country', $country);
+        if (!empty($image_path)) {
+            $stmt->bindParam(':image_path', $image_path);
+        }
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
         return $stmt->execute();
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM User WHERE id = :id";
+        $sql = "DELETE FROM `User` WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
     public function read() {
-        $sql = "SELECT * FROM User";
+        $sql = "SELECT * FROM `User`";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function readById($id) {
-        $sql = "SELECT * FROM User WHERE id = :id";
+        $sql = "SELECT * FROM `User` WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    // public function markAttendance($student_id, $attendance_date, $status) {
-    //     $sql = "INSERT INTO attendance (student_id, attendance_date, status)
-    //             VALUES (:student_id, :attendance_date, :status)";
-    //     $stmt = $this->connection->prepare($sql);
-    //     $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_INT);
-    //     $stmt->bindParam(':attendance_date', $attendance_date);
-    //     $stmt->bindParam(':status', $status);
-    //     return $stmt->execute();
-    // }
 }

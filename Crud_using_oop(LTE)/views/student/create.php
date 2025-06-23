@@ -12,15 +12,16 @@ $controller = new StudentController();
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $firstname = $_POST['firstname'] ?? '';
-    $lastname = $_POST['lastname'] ?? '';
+    $first_name = $_POST['first_name'] ?? '';
+    $last_name = $_POST['last_name'] ?? '';
     $email = $_POST['email'] ?? '';
-    $contactno = $_POST['contactno'] ?? '';
+    $phone_no = $_POST['phone_no'] ?? '';
     $address = $_POST['address'] ?? '';
 
     
-    $result = $controller->addStudent($firstname, $lastname, $email, $contactno, $address);
+    $result = $controller->addStudent($first_name, $last_name, $email, $phone_no, $address);
 
+    
     if ($result) {
         $_SESSION['success'] = "Student Added successfully";
         header("Location: index.php");
@@ -72,44 +73,44 @@ include_once("../sidebar.php");
         <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
     
-    <form action="create.php" method="post">
+    <form id="userForm" action="create.php" method="post">
     <div class="card-body">
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <label>First Name</label>
-            <input type="text" name="firstname" class="form-control" 
-                value="<?= htmlspecialchars($_POST['firstname'] ?? '') ?>" required>
+        <div class="form-group col-md-6">
+            <label for="first_name">First Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="first_name" name="first_name"
+                value="<?= htmlspecialchars($_SESSION['formData']['first_name'] ?? '') ?>" placeholder="Enter first name">
         </div>
-
-        <div class="col-md-6 mb-3">
-            <label>Last Name</label>
-            <input type="text" name="lastname" class="form-control"
-                value="<?= htmlspecialchars($_POST['lastname'] ?? '') ?>" required>
+        <div class="form-group col-md-6">
+            <label for="last_name">Last Name <small class="text-muted">(optional)</small></label>
+            <input type="text" class="form-control" id="last_name" name="last_name"
+                value="<?= htmlspecialchars($_SESSION['formData']['last_name'] ?? '') ?>" placeholder="Enter last name">
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control"
-                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
         </div>
-
-        <div class="col-md-6 mb-3">
-            <label>Contact No</label>
-            <input type="text" name="contactno" class="form-control"
-                value="<?= htmlspecialchars($_POST['contactno'] ?? '') ?>" required>
+        <div class="row">
+        <div class="form-group col-md-6">
+            <label for="email">Email <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="email" name="email"
+                value="<?= htmlspecialchars($_SESSION['formData']['email'] ?? '') ?>" placeholder="Enter email" autocomplete="off">
         </div>
-    </div>
-        <div class="mb-3">
-            <label>Address</label>
-            <textarea name="address" class="form-control" required><?= htmlspecialchars($_POST['address'] ?? '') ?></textarea>
+        <div class="form-group col-md-6">
+            <label for="phone_no">Phone Number <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="phone_no" name="phone_no"
+                value="<?= htmlspecialchars($_SESSION['formData']['phone_no'] ?? '') ?>"
+                placeholder="Enter 10-digit number" autocomplete="off" maxlength="10">
+        </div>
+        </div>
+        <div class="form-group">
+            <label for="address">Address <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="address" name="address" rows="4"
+                    placeholder="Enter your address"><?= htmlspecialchars($_SESSION['formData']['address'] ?? '') ?></textarea>
         </div>
     </div>
 
 <div class="card-footer">
     <div class="float-end">
         <a href="index.php" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary float-right">Create</button>
     </div>
     </div>
     </form>

@@ -13,27 +13,26 @@ class Student {
         $this->connection = $this->connection->connect();
     }
 
-    public function create($firstname, $lastname, $email, $image_path, $contactno, $address) {
-        $sql = "INSERT INTO student (firstname, lastname, email, image_path, contactno, address) 
-                VALUES (:firstname, :lastname, :email, :image_path, :contactno, :address)";
+    public function create($first_name, $last_name, $email, $phone_no, $address) {
+        $sql = "INSERT INTO student (first_name, last_name, email, phone_no, address) 
+                VALUES (:first_name, :last_name, :email, :phone_no, :address)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':firstname', $firstname);
-        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':image_path', $image_path);
-        $stmt->bindParam(':contactno', $contactno);
+        $stmt->bindParam(':phone_no', $phone_no);
         $stmt->bindParam(':address', $address);
         return $stmt->execute();
     }
 
-    public function update($id, $firstname, $lastname, $email, $contactno, $address) {
-        $sql = "UPDATE student SET firstname = :firstname, lastname = :lastname, email = :email, contactno = :contactno, address = :address WHERE id = :id";
+    public function update($id, $first_name, $last_name, $email, $phone_no, $address) {
+        $sql = "UPDATE student SET first_name = :first_name, last_name = :last_name, email = :email, phone_no = :phone_no, address = :address WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':firstname', $firstname);
-        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':contactno', $contactno);
+        $stmt->bindParam(':phone_no', $phone_no);
         $stmt->bindParam(':address', $address);
         return $stmt->execute();
     }

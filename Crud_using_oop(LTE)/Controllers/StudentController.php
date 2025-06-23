@@ -16,12 +16,12 @@ class StudentController {
         return $this->student->read();
     }
 
-    public function addStudent($firstname, $lastname, $email, $contactNo, $address) {
-        return $this->student->create($firstname, $lastname, $email, '', $contactNo, $address); // Pass empty image_path
+    public function addStudent($first_name, $last_name, $email, $contactNo, $address) {
+        return $this->student->create($first_name, $last_name, $email, $contactNo, $address); 
     }
 
-    public function editStudent($id, $firstname, $lastname, $email, $contactNo, $address) {
-        return $this->student->update($id, $firstname, $lastname, $email, $contactNo, $address);
+    public function editStudent($id, $first_name, $last_name, $email, $contactNo, $address) {
+        return $this->student->update($id, $first_name, $last_name, $email, $contactNo, $address);
     }
 
     public function deleteStudent($id) {
