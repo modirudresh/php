@@ -28,31 +28,32 @@ $allHobbies = ['Reading', 'Traveling', 'Sports', 'Music', 'Gaming', 'Watching Mo
 
 $formData = [
     'first_name' => $user['first_name'],
-    'last_name' => $user['last_name'],
-    'email' => $user['email'],
-    'phone_no' => $user['phone_no'],
-    'address' => $user['address'],
-    'DOB' => $user['DOB'],
-    'gender' => strtolower($user['gender']),
-    'country' => $user['country'],
+    'last_name'  => $user['last_name'],
+    'email'      => $user['email'],
+    'phone_no'   => $user['phone_no'],
+    'address'    => $user['address'],
+    'DOB'        => $user['DOB'],
+    'gender'     => strtolower($user['gender']),
+    'country'    => $user['country'],
     'image_path' => $user['image_path'],
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = (int)($_POST['id'] ?? 0);
-    $first_name = trim($_POST['first_name'] ?? '');
-    $last_name = trim($_POST['last_name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $phone_no = substr(trim($_POST['phone_no'] ?? ''), 0, 15);
-    $address = trim($_POST['address'] ?? '');
-    $DOB = trim($_POST['DOB'] ?? '');
-    $gender = $_POST['gender'] ?? '';
-    $hobby = $_POST['hobby'] ?? [];
-    $country = $_POST['country'] ?? '';
+    $id          = (int)($_POST['id'] ?? 0);
+    $first_name  = trim($_POST['first_name'] ?? '');
+    $last_name   = trim($_POST['last_name'] ?? '');
+    $email       = trim($_POST['email'] ?? '');
+    $phone_no    = substr(trim($_POST['phone_no'] ?? ''), 0, 15);
+    $address     = trim($_POST['address'] ?? '');
+    $DOB         = trim($_POST['DOB'] ?? '');
+    $gender      = $_POST['gender'] ?? '';
+    $hobby       = $_POST['hobby'] ?? [];
+    $country     = $_POST['country'] ?? '';
     $existing_image = $_POST['existing_image'] ?? null;
 
     $image_path = $existing_image;
 
+    // Handle image upload
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === 0) {
         $uploadDir = __DIR__ . '/../../uploads/';
         if (!is_dir($uploadDir)) {
@@ -70,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadPath)) {
                     $image_path = 'uploads/' . $newFileName;
 
+                    // Delete old image if exists and not default
                     if ($existing_image && file_exists(__DIR__ . '/../../' . $existing_image) && strpos($existing_image, 'profile.png') === false) {
                         unlink(__DIR__ . '/../../' . $existing_image);
                     }
@@ -90,20 +92,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Update user
     $result = $controller->edituser($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path);
 
     if (is_array($result) && !$result['success']) {
         $_SESSION['error'] = $result['message'];
 
+        // Re-populate form data on error
         $formData = [
             'first_name' => $first_name,
-            'last_name' => $last_name,
-            'email' => $email,
-            'phone_no' => $phone_no,
-            'address' => $address,
-            'DOB' => $DOB,
-            'gender' => $gender,
-            'country' => $country,
+            'last_name'  => $last_name,
+            'email'      => $email,
+            'phone_no'   => $phone_no,
+            'address'    => $address,
+            'DOB'        => $DOB,
+            'gender'     => $gender,
+            'country'    => $country,
             'image_path' => $image_path,
         ];
         $selectedHobbies = $hobby;  
@@ -154,147 +158,138 @@ include_once("../sidebar.php");
       <div class="card-header"><h3 class="card-title">Edit User</h3></div>
 
       <form id="userForm" action="edit.php?id=<?= $id ?>" method="post" enctype="multipart/form-data">
-            <div class="card-body">
-              <input type="hidden" name="id" value="<?= $user['id'] ?>">
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="firstname">First Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="firstname" name="first_name"
-                  value="<?= htmlspecialchars($formData['first_name']) ?>" placeholder="Enter first name">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="lastname">Last Name <small class="text-muted">(optional)</small></label>
-                  <input type="text" class="form-control" id="lastname" name="last_name"
-                         value="<?= htmlspecialchars($formData['last_name'] ?? '') ?>" placeholder="Enter last name">
-                </div>
+        <div class="card-body">
+          <input type="hidden" name="id" value="<?= $user['id'] ?>">
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="firstname">First Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="firstname" name="first_name"
+                     value="<?= htmlspecialchars($formData['first_name']) ?>" placeholder="Enter first name">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="lastname">Last Name <small class="text-muted">(optional)</small></label>
+              <input type="text" class="form-control" id="lastname" name="last_name"
+                     value="<?= htmlspecialchars($formData['last_name'] ?? '') ?>" placeholder="Enter last name">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="email">Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" id="email" name="email"
+                     value="<?= htmlspecialchars($formData['email'] ?? '') ?>" placeholder="Enter email address">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="phone_no">Phone Number <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="phone_no" name="phone_no"
+                     value="<?= htmlspecialchars($formData['phone_no'] ?? '') ?>" placeholder="Enter 10-digit number" maxlength="10">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-2">
+              <small class="form-text text-muted">Current Image:</small>
+              <img 
+                src="<?= !empty($user['image_path']) && file_exists(__DIR__ . '/../../' . $user['image_path']) 
+                      ? '../../' . htmlspecialchars($user['image_path']) 
+                      : '../../uploads/default.png' ?>" 
+                alt="Profile" 
+                class="img-thumbnail mt-1 shadow-lg" 
+                style="height: 80px; width: auto;"
+              >
+            </div>
+
+            <div class="form-group col-md-5">
+              <label for="image_path">Profile Image <small class="text-danger">*</small></label>
+              <input type="hidden" name="existing_image" value="<?= htmlspecialchars($user['image_path'] ?? '') ?>">
+              <div class="custom-file">
+                <input type="file" 
+                       class="custom-file-input" 
+                       id="image_path" 
+                       name="image_path" 
+                       accept="image/*">
+                <label class="custom-file-label" for="image_path">Choose file</label>
               </div>
+              <small class="form-text text-muted">Allowed: JPG, JPEG, PNG, GIF. Max size: 2MB.</small>
+            </div>
 
-              <!-- Email, Phone -->
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="email">Email <span class="text-danger">*</span></label>
-                  <input type="email" class="form-control" id="email" name="email"
-                         value="<?= htmlspecialchars($formData['email'] ?? '') ?>" placeholder="Enter email address">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="phone_no">Phone Number <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="phone_no" name="phone_no"
-                         value="<?= htmlspecialchars($formData['phone_no'] ?? '') ?>" placeholder="Enter 10-digit number" maxlength="10">
-                </div>
-              </div>
-              <!-- DOB, Profile Image -->
-              <div class="row">
-              <div class="form-group col-md-2">
-                  <small class="form-text text-muted">Current Image:</small>
-                  <img 
-                      src="<?= !empty($user['image_path']) && file_exists($user['image_path']) ? htmlspecialchars($user['image_path']) : '../../uploads/default.png' ?>" 
-                      alt="Profile" 
-                      class="img-thumbnail mt-1 shadow-lg" 
-                      style="height: 80px; width: auto;"
-                  >
-              </div>
-
-                <div class="form-group col-md-5">
-                    <label for="image_path">
-                        Profile Image 
-                        <small class="form-text text-muted d-inline-block ml-1"><span class="text-danger">*</span></small>
-                    </label>
-                    <input type="hidden" name="existing_image" value="<?= htmlspecialchars($user['image_path'] ?? '') ?>">
-                    <div class="custom-file">
-                        <input type="file" 
-                              class="custom-file-input" 
-                              id="image_path" 
-                              name="image_path" 
-                              accept="image/*">
-                        <label class="custom-file-label" for="image_path">Choose file</label>
-                    </div>
-                    <small class="form-text text-muted">
-                        Allowed: JPG, JPEG, PNG, GIF. Max size: 2MB.
-                    </small>
-                </div>
-
-                
-                <div class="form-group col-md-5">
-                <label for="DOB">Date of Birth <span class="text-danger">*</span></label>
-                <div class="input-group date" id="dobPicker" data-target-input="nearest">
-                  <input type="text" 
-                        class="form-control datetimepicker-input" 
-                        data-target="#dobPicker" 
-                        id="DOB" 
-                        name="DOB"
-                        value="<?= !empty($formData['DOB']) ? date('Y-m-d', strtotime($formData['DOB'])) : '' ?>"
-
-                        placeholder="Select date of birth" />
-                        
-                  <div class="input-group-append" data-target="#dobPicker" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
+            <div class="form-group col-md-5">
+              <label for="DOB">Date of Birth <span class="text-danger">*</span></label>
+              <div class="input-group date" id="dobPicker" data-target-input="nearest">
+                <input type="text" 
+                       class="form-control datetimepicker-input" 
+                       data-target="#dobPicker" 
+                       id="DOB" 
+                       name="DOB"
+                       value="<?= !empty($formData['DOB']) ? date('Y-m-d', strtotime($formData['DOB'])) : '' ?>"
+                       placeholder="Select date of birth" autocomplete="off" />
+                <div class="input-group-append" data-target="#dobPicker" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
               </div>
             </div>
+          </div>
 
-              <!-- Gender -->
-              <div class="row">
-                  <div class="form-group col-md-6">
-                    <label class="d-block">Gender <span class="text-danger">*</span></label>
-                    <div class="bg-light p-3 rounded shadow-sm">
-                    <?php
-                        $genders = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'];
-                        foreach ($genders as $key => $label) {
-                            $checked = ($formData['gender'] === $key) ? 'checked' : '';
-                            echo "<div class='form-check form-check-inline mr-3'>
-                                    <input class='form-check-input' type='radio' name='gender' id='gender_$key' value='$key' $checked>
-                                    <label class='form-check-label' for='gender_$key'>$label</label>
-                                  </div>";
-                        }
-                        ?>
-                    </div>
-                </div>
-
-                <!-- Hobbies -->
-                <div class="form-group col-md-6">
-                  <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
-                  <div class="bg-light p-3 rounded shadow-sm">
-                  <?php
-                      foreach ($allHobbies as $hobby) {
-                          $checked = in_array($hobby, $selectedHobbies) ? 'checked' : '';
-                          echo "<div class='form-check form-check-inline'>
-                                  <input class='form-check-input' type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
-                                  <label class='form-check-label'>" . htmlspecialchars($hobby) . "</label>
-                                </div>";
-                      }
-                    ?>
-                    </div>
-                </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label class="d-block">Gender <span class="text-danger">*</span></label>
+              <div class="bg-light p-3 rounded shadow-sm">
+                <?php
+                $genders = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'];
+                foreach ($genders as $key => $label) {
+                    $checked = ($formData['gender'] === $key) ? 'checked' : '';
+                    echo "<div class='form-check form-check-inline mr-3'>
+                            <input class='form-check-input' type='radio' name='gender' id='gender_$key' value='$key' $checked>
+                            <label class='form-check-label' for='gender_$key'>$label</label>
+                          </div>";
+                }
+                ?>
               </div>
-
-              <!-- Address, Country -->
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="address">Address <span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="address" name="address" rows="4"
-                            placeholder="Enter your address"><?= htmlspecialchars($formData['address'] ?? '') ?></textarea>
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label for="country">Country <span class="text-danger">*</span></label>
-                  <select class="form-control" name="country" id="country">
-                    <option value="" disabled <?= empty($formData['country']) ? 'selected' : '' ?>>Select From Here</option>
-                    <option value="india" <?= ($formData['country'] ?? '') === 'india' ? 'selected' : '' ?>>🇮🇳 India</option>
-                    <option value="UK" <?= ($formData['country'] ?? '') === 'UK' ? 'selected' : '' ?>>🇬🇧 UK</option>
-                    <option value="russia" <?= ($formData['country'] ?? '') === 'russia' ? 'selected' : '' ?>>🇷🇺 Russia</option>
-                    <option value="usa" <?= ($formData['country'] ?? '') === 'usa' ? 'selected' : '' ?>>🇺🇸 USA</option>
-                  </select>
-                </div>
-              </div>
-
             </div>
 
-            <div class="card-footer">
-              <button type="button" class="btn btn-secondary" onclick="window.location.href='index.php'">Cancel</button>
-              <button type="submit" name="update" class="btn btn-warning float-right">Update User</button>
+            <div class="form-group col-md-6">
+              <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
+              <div class="bg-light p-3 rounded shadow-sm">
+                <?php
+                foreach ($allHobbies as $hobby) {
+                    $checked = in_array($hobby, $selectedHobbies) ? 'checked' : '';
+                    echo "<div class='form-check form-check-inline'>
+                            <input class='form-check-input' type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
+                            <label class='form-check-label'>" . htmlspecialchars($hobby) . "</label>
+                          </div>";
+                }
+                ?>
+              </div>
             </div>
-          </form>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="address">Address <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="address" name="address" rows="4"
+                        placeholder="Enter your address"><?= htmlspecialchars($formData['address'] ?? '') ?></textarea>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="country">Country <span class="text-danger">*</span></label>
+              <select class="form-control" name="country" id="country">
+                <option value="" disabled <?= empty($formData['country']) ? 'selected' : '' ?>>Select From Here</option>
+                <option value="india" <?= ($formData['country'] ?? '') === 'india' ? 'selected' : '' ?>>🇮🇳 India</option>
+                <option value="UK" <?= ($formData['country'] ?? '') === 'UK' ? 'selected' : '' ?>>🇬🇧 UK</option>
+                <option value="russia" <?= ($formData['country'] ?? '') === 'russia' ? 'selected' : '' ?>>🇷🇺 Russia</option>
+                <option value="usa" <?= ($formData['country'] ?? '') === 'usa' ? 'selected' : '' ?>>🇺🇸 USA</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='index.php'">Cancel</button>
+          <button type="submit" name="update" class="btn btn-warning float-right">Update User</button>
+        </div>
+      </form>
     </div>
   </div>
 </section>

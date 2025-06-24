@@ -14,19 +14,38 @@ class User {
         $this->connection = $db->connect();
     }
 
+    public function emailExists($email, $excludeId = null) {
+        $sql = "SELECT COUNT(*) FROM `User` WHERE email = :email";
+        if ($excludeId !== null) {
+            $sql .= " AND id != :id";
+        }
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        if ($excludeId !== null) {
+            $stmt->bindParam(':id', $excludeId, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
     public function create($first_name, $last_name, $email, $image_path, $phone_no, $address, $password, $DOB, $gender, $hobby, $country) {
+        if ($this->emailExists($email)) {
+            return false;
+        }
+
         if (is_array($hobby)) {
             $hobby = implode(', ', $hobby);
         }
-    
+
         $formatted_dob = date('Y-m-d', strtotime($DOB));
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-    
+
         $sql = "INSERT INTO `User` (first_name, last_name, email, image_path, phone_no, address, password, DOB, gender, hobby, country) 
                 VALUES (:first_name, :last_name, :email, :image_path, :phone_no, :address, :password, :DOB, :gender, :hobby, :country)";
-    
+
         $stmt = $this->connection->prepare($sql);
-    
+
         $stmt->bindParam(':first_name', $first_name);
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
@@ -38,12 +57,15 @@ class User {
         $stmt->bindParam(':gender', $gender);
         $stmt->bindParam(':hobby', $hobby);
         $stmt->bindParam(':country', $country);
-    
+
         return $stmt->execute();
     }
-    
 
     public function update($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path = null) {
+        if ($this->emailExists($email, $id)) {
+            return false;
+        }
+
         if (is_array($hobby)) {
             $hobby = implode(', ', $hobby);
         }
