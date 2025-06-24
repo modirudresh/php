@@ -35,4 +35,14 @@ class StudentController {
     public function markAttendance($student_id, $attendance_date, $status) {
         return $this->student->markAttendance($student_id, $attendance_date, $status);
     }
+
+    public function emailExists($email) {
+        return $this->student->emailExists($email);
+    }
+
+    public function emailExistsForOther($email, $id) {
+        return $this->student->emailExistsForOther($email, $id);
+    }
+    
+    
 }

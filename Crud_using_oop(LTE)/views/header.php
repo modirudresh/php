@@ -35,7 +35,8 @@
   <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css" />
   <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css" />
 
-  
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -101,7 +102,7 @@
       <!-- Profile Dropdown -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-          <img src="../../uploads/default.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
+          <img src="../../uploads/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
           <i class="fas fa-angle-down ml-1"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right p-2" style="min-width: 220px;">

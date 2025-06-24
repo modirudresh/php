@@ -168,7 +168,7 @@ include_once("../sidebar.php");
                      value="<?= htmlspecialchars($formData['first_name']) ?>" placeholder="Enter first name">
             </div>
             <div class="form-group col-md-6">
-              <label for="lastname">Last Name <small class="text-muted">(optional)</small></label>
+              <label for="lastname">Last Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="lastname" name="last_name"
                      value="<?= htmlspecialchars($formData['last_name'] ?? '') ?>" placeholder="Enter last name">
             </div>

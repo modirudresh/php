@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             <img src="<?= (!empty($user['image_path']) && file_exists('../../' . $user['image_path'])) ? '../../' . htmlspecialchars($user['image_path']) : '../../uploads/default.png' ?>" 
                                 alt="Profile" 
                                 class="img-thumbnail mt-1 shadow-lg" 
-                                style="height: 80px; width: auto; display: inline-block;">
+                                style="height: 150px; width: auto; display: inline-block;">
             </div>
 
             <!-- User Info Table -->

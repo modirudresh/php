@@ -53,17 +53,20 @@ include_once("../sidebar.php");
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?= htmlspecialchars($_SESSION['success']) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <?php unset($_SESSION['success']); ?>
         <?php elseif (isset($_SESSION['error'])): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <?= htmlspecialchars($_SESSION['error']) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
-
         <div class="card">
             <div class="card-header">
                 <div class="row">
@@ -132,30 +135,30 @@ include_once("../sidebar.php");
                                         </a>
 
                                         <!-- Delete Trigger -->
-                                        <a href="#" class="btn btn-sm btn-danger" title="Delete User" aria-label="Delete User" data-bs-toggle="modal" data-bs-target="#deleteModal<?= htmlspecialchars($User['id']) ?>">
-                                            <i class="fa fa-trash"></i>
+                                        <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal<?= $User['id'] ?>">
+                                        <i class="fa fa-trash"></i>
                                         </a>
 
                                         <!-- Delete Modal -->
-                                        <div class="modal fade" id="deleteModal<?= htmlspecialchars($User['id']) ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($User['id']) ?>" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="deleteModalLabel<?= htmlspecialchars($User['id']) ?>">Confirm Delete</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure you want to delete this record?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <form method="post" action="index.php" style="display:inline;">
-                                                            <input type="hidden" name="delete_id" value="<?= htmlspecialchars($User['id']) ?>">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                        <div class="modal fade" id="deleteModal<?= $User['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?= $User['id'] ?>" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel<?= $User['id'] ?>">Confirm Delete</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true" style="font-size:28px;">&times;</span>
+                                                </button>
                                             </div>
+                                            <div class="modal-body">Are you sure you want to delete this record?</div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form method="post" action="index.php" style="display:inline;">
+                                                <input type="hidden" name="delete_id" value="<?= $User['id'] ?>">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                            </div>
+                                        </div>
                                         </div>
                                     </td>
                                 </tr>

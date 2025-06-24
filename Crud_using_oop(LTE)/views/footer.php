@@ -17,6 +17,14 @@
 <script>$.widget.bridge('uibutton', $.ui.button);</script>
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <!-- Plugins -->
 <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="../../plugins/toastr/toastr.min.js"></script>
@@ -80,12 +88,45 @@
     bsCustomFileInput.init();
 
     window.openDeleteModal = function(id) {
-      var modal = new bootstrap.Modal(document.getElementById('deleteModal' + id));
-      modal.show();
+    var modal = new bootstrap.Modal(document.getElementById('deleteModal' + id));
+    modal.show();
     };
   });
 </script>
 
+<!-- Initialize DataTable -->
+<script>
+  $(function () {
+    $('#studentTable').DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false,
+      ordering: true,
+      info: true,
+      paging: true,
+      searching: true,
+      columnDefs: [
+        { orderable: false, targets: [3, 6] } // Disable ordering on Image and Actions columns
+      ],
+      buttons: ["copy", "csv", "excel", "pdf", "print", "colvis",
+        {
+          text: 'Reset',
+          action: function () {
+            location.reload();
+          }
+        }
+      ]
+    }).buttons().container().appendTo('#userTable_wrapper .col-md-6:eq(0)');
+
+    // Initialize bsCustomFileInput
+    bsCustomFileInput.init();
+
+    window.openDeleteModal = function(id) {
+    var modal = new bootstrap.Modal(document.getElementById('deleteModal' + id));
+    modal.show();
+    };
+  });
+</script>
 <!-- Custom Validation and UI Scripts -->
 <script>
   $(function () {
