@@ -97,7 +97,6 @@ $(function () {
       'hobby[]': { required: true, minlength: 1 },
       address: { required: true, minlength: 10, pattern: /^[A-Za-z0-9\s,.'-]{10,}$/ },
       country: { required: true },
-      // image_path: { required: true, extension: "jpg|jpeg|png|gif", filesize: 2097152 }
     },
     messages: {
       first_name: {
@@ -136,11 +135,7 @@ $(function () {
         pattern: "Invalid address format"
       },
       country: "Select a country",
-      // image_path: {
-      //   required: "Upload profile image",
-      //   extension: "Only JPG, JPEG, PNG, GIF allowed",
-      //   filesize: "Max 2MB allowed"
-      // }
+     
     },
     errorElement: 'span',
     errorPlacement: function (error, element) {
@@ -173,7 +168,7 @@ $(function () {
     }
   });
 
-  // Initialize datepicker
+      // Initialize datepicker
         $('#dobPicker').datetimepicker({
           format: 'YYYY-MM-DD',
           useCurrent: false,

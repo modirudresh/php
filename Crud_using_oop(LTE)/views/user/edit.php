@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $image_path = $existing_image;
 
-    // Handle image upload
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === 0) {
         $uploadDir = __DIR__ . '/../../uploads/';
         if (!is_dir($uploadDir)) {
@@ -71,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadPath)) {
                     $image_path = 'uploads/' . $newFileName;
 
-                    // Delete old image if not default
                     if ($existing_image && file_exists(__DIR__ . '/../../' . $existing_image) && strpos($existing_image, 'profile.png') === false) {
                         unlink(__DIR__ . '/../../' . $existing_image);
                     }
@@ -92,14 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Call edituser - returns ['success' => bool, 'message' => string]
     $result = $controller->edituser($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path);
 
     if (is_array($result) && !$result['success']) {
-        // Validation or duplicate email error
         $_SESSION['error'] = $result['message'];
 
-        // Repopulate form data on error
         $formData = [
             'first_name' => $first_name,
             'last_name' => $last_name,
@@ -111,9 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'country' => $country,
             'image_path' => $image_path,
         ];
-        $selectedHobbies = $hobby;  // $hobby is already an array
+        $selectedHobbies = $hobby;  
     } else {
-        // Success
         $_SESSION['success'] = "User updated successfully!";
         header("Location: index.php");
         exit;
