@@ -1,3 +1,21 @@
+<!-- Password toggle -->
+<script>
+  document.querySelectorAll(".toggle").forEach(toggle => {
+    toggle.addEventListener("click", () => {
+      const input = toggle.closest(".input-group").querySelector(".password");
+      if (input.type === "password") {
+        input.type = "text";
+        toggle.classList.remove("fa-eye");
+        toggle.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        toggle.classList.remove("fa-eye-slash");
+        toggle.classList.add("fa-eye");
+      }
+    });
+  });
+</script>
+
 <!-- /.content-wrapper -->
 <footer class="main-footer">
   <strong>&copy; 2014-<?= date('Y') ?> <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
@@ -140,7 +158,7 @@
         last_name: { required: true, minlength: 3, pattern: /^[A-Za-z\s'-]+$/ },
         email: { required: true, email: true },
         phone_no: { required: true, digits: true, minlength: 10, maxlength: 10, pattern: /^[6-9]\d{9}$/ },
-        password: { required: true, minlength: 8, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/ },
+        password: { required: true, minlength: 8, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/ },
         confirm_password: { required: true, equalTo: '#password' },
         DOB: { required: true, date: true },
         gender: { required: true },
@@ -226,21 +244,7 @@
   });
 </script>
 
-<!-- Password toggle -->
-<script>
-  document.querySelectorAll(".toggle").forEach(toggle => {
-    const input = toggle.parentElement.querySelector(".password");
-    toggle.addEventListener("click", () => {
-      if (input.type === "password") {
-        input.type = "text";
-        toggle.classList.replace("fa-eye-slash", "fa-eye");
-      } else {
-        input.type = "password";
-        toggle.classList.replace("fa-eye", "fa-eye-slash");
-      }
-    });
-  });
-</script>
+
 
 <?php if (!empty($message)) : ?>
 <script>

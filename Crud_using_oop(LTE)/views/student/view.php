@@ -114,5 +114,4 @@ include_once("../sidebar.php");
   </section>
 </div>
 </div>
-</div>
 <?php include_once("../footer.php"); ?>

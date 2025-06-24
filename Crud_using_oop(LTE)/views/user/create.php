@@ -166,14 +166,13 @@ $formData = $_SESSION['formData'] ?? [];
                         <div class="form-group col-md-6">
                             <label for="password">Password <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="password" class="form-control password" id="password" name="password"
-                                       placeholder="Enter password" autocomplete="new-password">
+                                <input type="password" class="form-control password" id="password" name="password" placeholder="Enter password" autocomplete="new-password">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <span class="fa fa-eye toggle icon" style="cursor: pointer;"></span>
+                                    <span class="fa fa-eye toggle" style="cursor: pointer;"></span>
                                     </div>
                                 </div>
-                            </div>
+                                </div>
                         </div>
 
                         <div class="form-group col-md-6">
@@ -210,6 +209,7 @@ $formData = $_SESSION['formData'] ?? [];
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label>Gender <span class="text-danger">*</span></label><br>
+                            <div class="bg-light p-3 rounded shadow-sm">
                             <?php
                             $genders = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'];
                             foreach ($genders as $key => $label) {
@@ -220,10 +220,12 @@ $formData = $_SESSION['formData'] ?? [];
                                       </div>";
                             }
                             ?>
+                            </div>
                         </div>
 
                         <div class="form-group col-md-6">
                             <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
+                            <div class="bg-light p-3 rounded shadow-sm">
                             <?php
                             $hobbies = ["Travelling", "Watch Movies", "Reading", "Cooking", "Photography", "Gaming", "Music"];
                             $selectedHobbies = $formData['hobby'] ?? [];
@@ -236,6 +238,7 @@ $formData = $_SESSION['formData'] ?? [];
                                       </div>";
                             }
                             ?>
+                            </div>
                         </div>
                     </div>
 
