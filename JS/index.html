@@ -8,6 +8,43 @@
 
     <body>
 
+        <h2>The concat() Method</h2>
+        
+        <p>The concat() method concatenates (joins) two or more arrays:</p>
+        <pre>
+const arr1 = ["Cecilie", "Lone"];
+const arr2 = ["Emil", "Tobias", "Linus"];
+        </pre>
+
+        <p id="concat"></p>
+        
+        <script>
+            const arr1 = ["Cecilie", "Lone"];
+            const arr2 = ["Emil", "Tobias", "Linus"];
+
+            const children = arr1.concat(arr2);
+            document.getElementById("concat").innerHTML = children;
+        </script>
+
+<h3>Join three arrays:</h3>    
+<pre>
+const arr1 = ["Cecilie", "Lone"];
+const arr2 = ["Emil", "Tobias", "Linus"];
+const arr3 = ["Robin"];
+const children = arr1.concat(arr2, arr3);        
+</pre>
+
+<p id="concat2"></p>
+
+<script>
+    const ar1 = ["Cecilie", "Lone"];
+        const ar2 = ["Emil", "Tobias", "Linus"];
+        const ar3 = ["Robin"];
+        const children2 = ar1.concat(ar2, ar3); 
+    document.getElementById("concat2").innerHTML = children2;
+</script>
+
+
         <h2>The Object.assign() Method</h2>
         
         <p id="demo"></p>
