@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+    <body>
+        <h1>Creating JavaScript Objects</h1>
+        <h2>Using an Object Literal</h2>
+<pre>
+    const person = {};
+    
+    person.firstName = "John";
+    person.lastName = "Doe";
+    person.age = 50;
+    person.eyeColor = "blue";
+
+</pre>
+        <p id="demo"></p>
+
+        <script>
+            // Create an empty Object
+            const person = {};
+
+            // Add Properties
+            person.firstName = "John";
+            person.lastName = "Doe";
+            person.age = 50;
+            person.eyeColor = "blue";
+
+            // Display Data from Object
+            document.getElementById("demo").innerHTML =
+                "hello " + person.firstName + " " + person.lastName + ", </br> " + person.firstName + " is " + person.age + " years old.";
+        </script>
+
+    </body>
+
+</html>
