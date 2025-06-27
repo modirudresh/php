@@ -41,8 +41,8 @@
 <!-- Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-<!-- Bootstrap 4 JS
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script> -->
+<!-- Bootstrap 4 JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <!-- Plugins -->
 <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="../../plugins/toastr/toastr.min.js"></script>
@@ -148,61 +148,23 @@
 <!-- Custom Validation and UI Scripts -->
 <script>
   $(function () {
-    $.validator.addMethod('pattern', function (value, element, param) {
+    $.validator.addMethod('pattern', function(value, element, param) {
       return this.optional(element) || param.test(value);
     }, 'Invalid format.');
 
     $('#userForm').validate({
       rules: {
-        first_name: {
-          required: true,
-          minlength: 3,
-          pattern: /^[A-Za-z\s'-]+$/
-        },
-        last_name: {
-          required: true,
-          minlength: 3,
-          pattern: /^[A-Za-z\s'-]+$/
-        },
-        email: {
-          required: true,
-          email: true
-        },
-        phone_no: {
-          required: true,
-          digits: true,
-          minlength: 10,
-          maxlength: 10,
-          pattern: /^[6-9]\d{9}$/
-        },
-        password: {
-          required: true,
-          minlength: 8,
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
-        },
-        confirm_password: {
-          required: true,
-          equalTo: '#password'
-        },
-        DOB: {
-          required: true,
-          date: true
-        },
-        gender: {
-          required: true
-        },
-        'hobby[]': {
-          required: true,
-          minlength: 1
-        },
-        address: {
-          required: true,
-          minlength: 10,
-          pattern: /^[A-Za-z0-9\s,.'-]{10,}$/
-        },
-        country: {
-          required: true
-        },
+        first_name: { required: true, minlength: 3, pattern: /^[A-Za-z\s'-]+$/ },
+        last_name: { required: true, minlength: 3, pattern: /^[A-Za-z\s'-]+$/ },
+        email: { required: true, email: true },
+        phone_no: { required: true, digits: true, minlength: 10, maxlength: 10, pattern: /^[6-9]\d{9}$/ },
+        password: { required: true, minlength: 8, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/ },
+        confirm_password: { required: true, equalTo: '#password' },
+        DOB: { required: true, date: true },
+        gender: { required: true },
+        'hobby[]': { required: true, minlength: 1 },
+        address: { required: true, minlength: 10, pattern: /^[A-Za-z0-9\s,.'-]{10,}$/ },
+        country: { required: true },
         image_path: {
           required: function () {
             return window.location.pathname.includes('create.php');
@@ -212,57 +174,44 @@
       },
       messages: {
         first_name: {
-          required: "First name is required",
-          minlength: "First name must be at least 3 characters",
-          pattern: "Only letters, spaces, apostrophes, and hyphens are allowed"
+          required: "Please enter your first name",
+          minlength: "Minimum 3 characters",
+          pattern: "Letters, spaces, apostrophes, and hyphens only."
         },
         last_name: {
-          required: "Last name is required",
-          minlength: "Last name must be at least 3 characters",
-          pattern: "Only letters, spaces, apostrophes, and hyphens are allowed"
+          required: "Please enter your last name",
+          minlength: "Minimum 3 characters",
+          pattern: "Letters, spaces, apostrophes, and hyphens only."
         },
-        email: {
-          required: "Email is required",
-          email: "Please enter a valid email address"
-        },
+        email: "Please enter a valid email",
         phone_no: {
-          required: "Phone number is required",
-          digits: "Only digits are allowed",
-          minlength: "Phone number must be 10 digits",
-          maxlength: "Phone number must be 10 digits",
-          pattern: "Phone number must start with 6, 7, 8, or 9"
+          required: "Enter phone number",
+          digits: "Digits only",
+          minlength: "Must be 10 digits",
+          maxlength: "Must be 10 digits",
+          pattern: "Starts with 6-9"
         },
         password: {
-          required: "Password is required",
-          minlength: "Password must be at least 8 characters",
-          pattern: "Must include uppercase, lowercase, number, and special character"
+          required: "Enter password",
+          minlength: "Min 8 characters",
+          pattern: "Include upper, lower, number & special char"
         },
         confirm_password: {
-          required: "Please Re-enter your password",
+          required: "Confirm password",
           equalTo: "Passwords do not match"
         },
-        DOB: {
-          required: "Date of birth is required",
-          date: "Please enter a valid date"
-        },
-        gender: {
-          required: "Please select your gender"
-        },
-        'hobby[]': {
-          required: "Please select at least one hobby",
-          minlength: "Please select at least one hobby"
-        },
+        DOB: "Select your birthdate",
+        gender: "Select a gender",
+        'hobby[]': "Select at least one hobby",
         address: {
-          required: "Address is required",
-          minlength: "Address must be at least 10 characters",
-          pattern: "Please enter a valid address"
+          required: "Enter your address",
+          minlength: "Min 10 characters",
+          pattern: "Invalid address format"
         },
-        country: {
-          required: "Please select your country"
-        },
+        country: "Select a country",
         image_path: {
           required: "Please upload a profile image",
-          extension: "Allowed formats: jpg, jpeg, png, gif"
+          extension: "Only image files allowed (jpg, jpeg, png, gif)"
         }
       },
       errorElement: 'span',
@@ -295,7 +244,6 @@
     });
   });
 </script>
-
 
 
 

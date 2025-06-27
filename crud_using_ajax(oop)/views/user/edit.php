@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     $first_name = $_POST['first_name'] ?? '';
     $last_name = $_POST['last_name'] ?? '';
     $email = $_POST['email'] ?? '';
-    $phone_no = substr(trim($_POST['phone_no'] ?? ''), 0, 15);
+    $phone_no = substr(trim($_POST['phone_no'] ?? ''), 0, 10);
     $password = $_POST['password'] ?? '';
     $DOB = $_POST['DOB'] ?? '';
     $gender = $_POST['gender'] ?? '';
@@ -35,36 +35,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
 
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === 0) {
         $uploadDir = __DIR__ . '/../../uploads/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
 
         $ext = strtolower(pathinfo($_FILES['image_path']['name'], PATHINFO_EXTENSION));
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
-        if (!in_array($ext, $allowed)) {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid image type.']);
-            exit;
-        }
+        if (in_array($ext, $allowed)) {
+            if ($_FILES['image_path']['size'] <= 2 * 1024 * 1024) {
+                $newFileName = uniqid('usr_') . '.' . $ext;
+                $uploadPath = $uploadDir . $newFileName;
 
-        if ($_FILES['image_path']['size'] > 2 * 1024 * 1024) {
-            echo json_encode(['status' => 'error', 'message' => 'Image exceeds 2MB limit.']);
-            exit;
-        }
+                if (move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadPath)) {
+                    $image_path = 'uploads/' . $newFileName;
 
-        $fileName = uniqid('usr_') . '.' . $ext;
-        $uploadPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadPath)) {
-            $image_path = 'uploads/' . $fileName;
-            if ($existing_image && file_exists(__DIR__ . '/../../' . $existing_image) && strpos($existing_image, 'default.png') === false) {
-                unlink(__DIR__ . '/../../' . $existing_image);
+                    // Delete old image if exists and not default
+                    if ($existing_image && file_exists(__DIR__ . '/../../' . $existing_image) && strpos($existing_image, 'profile.png') === false) {
+                        unlink(__DIR__ . '/../../' . $existing_image);
+                    }
+                } else {
+                    $_SESSION['error'] = "Failed to upload the image.";
+                    header("Location: edit.php?id=" . $id);
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = "Image exceeds 2MB limit.";
+                header("Location: edit.php?id=" . $id);
+                exit;
             }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Image upload failed.']);
+            $_SESSION['error'] = "Invalid image type. Allowed: JPG, JPEG, PNG, GIF.";
+            header("Location: edit.php?id=" . $id);
             exit;
         }
     }
 
-    $result = $controller->edituser($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path, $password);
+    $result = $controller->edituser($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path);
 
     if (is_array($result) && !$result['success']) {
         echo json_encode(['status' => 'error', 'message' => $result['message']]);
@@ -208,15 +215,14 @@ $selectedHobbies = explode(',', $user['hobby']);
     </div>
 </section>
 </div>
-</div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-$(document).ready(function () {
-  $('#userForm').submit(function (e) {
+  $(function () {
+    $('#userForm').submit(function (e) {
       e.preventDefault();
 
       var form = this;
