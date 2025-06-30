@@ -15,63 +15,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     header('Content-Type: application/json');
 
     $id = $_POST['id'] ?? '';
-    if (empty($id) || !is_numeric($id)) {
+    if (!is_numeric($id)) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid user ID.']);
         exit;
     }
 
-    $first_name = $_POST['first_name'] ?? '';
-    $last_name = $_POST['last_name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone_no = substr(trim($_POST['phone_no'] ?? ''), 0, 10);
-    $password = $_POST['password'] ?? '';
-    $DOB = $_POST['DOB'] ?? '';
-    $gender = $_POST['gender'] ?? '';
-    $hobby = isset($_POST['hobby']) ? implode(',', $_POST['hobby']) : '';
-    $address = $_POST['address'] ?? '';
-    $country = $_POST['country'] ?? '';
+    $first_name = trim($_POST['first_name'] ?? '');
+    $last_name  = trim($_POST['last_name'] ?? '');
+    $email      = trim($_POST['email'] ?? '');
+    $phone_no   = substr(trim($_POST['phone_no'] ?? ''), 0, 10);
+    $DOB        = trim($_POST['DOB'] ?? '');
+    $gender     = trim($_POST['gender'] ?? '');
+    $hobby      = isset($_POST['hobby']) ? implode(',', $_POST['hobby']) : '';
+    $address    = trim($_POST['address'] ?? '');
+    $country    = trim($_POST['country'] ?? '');
     $existing_image = $_POST['existing_image'] ?? '';
     $image_path = $existing_image;
 
-    if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === 0) {
-        $uploadDir = __DIR__ . '/../../uploads/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+    if (!empty($_FILES['image_path']['name']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
+        $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $fileExt = strtolower(pathinfo($_FILES['image_path']['name'], PATHINFO_EXTENSION));
 
-        $ext = strtolower(pathinfo($_FILES['image_path']['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-
-        if (in_array($ext, $allowed)) {
+        if (in_array($fileExt, $allowedExts)) {
             if ($_FILES['image_path']['size'] <= 2 * 1024 * 1024) {
-                $newFileName = uniqid('usr_') . '.' . $ext;
-                $uploadPath = $uploadDir . $newFileName;
+                $uploadDir = __DIR__ . '/../../uploads/';
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+                $fileName = uniqid('usr_') . '.' . $fileExt;
+                $uploadPath = $uploadDir . $fileName;
 
                 if (move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadPath)) {
-                    $image_path = 'uploads/' . $newFileName;
+                    $image_path = 'uploads/' . $fileName;
 
-                    // Delete old image if exists and not default
-                    if ($existing_image && file_exists(__DIR__ . '/../../' . $existing_image) && strpos($existing_image, 'profile.png') === false) {
-                        unlink(__DIR__ . '/../../' . $existing_image);
+                    $oldPath = __DIR__ . '/../../' . $existing_image;
+                    if ($existing_image && file_exists($oldPath) && !str_contains($existing_image, 'profile.png')) {
+                        unlink($oldPath);
                     }
                 } else {
-                    $_SESSION['error'] = "Failed to upload the image.";
-                    header("Location: edit.php?id=" . $id);
+                    echo json_encode(['status' => 'error', 'message' => 'Image upload failed.']);
                     exit;
                 }
             } else {
-                $_SESSION['error'] = "Image exceeds 2MB limit.";
-                header("Location: edit.php?id=" . $id);
+                echo json_encode(['status' => 'error', 'message' => 'Image must be under 2MB.']);
                 exit;
             }
         } else {
-            $_SESSION['error'] = "Invalid image type. Allowed: JPG, JPEG, PNG, GIF.";
-            header("Location: edit.php?id=" . $id);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid image type.']);
             exit;
         }
     }
 
-    $result = $controller->edituser($id, $first_name, $last_name, $email, $phone_no, $address, $DOB, $gender, $hobby, $country, $image_path);
+    $result = $controller->edituser(
+        $id, $first_name, $last_name, $email, $phone_no, $address, $DOB,
+        $gender, $hobby, $country, $image_path
+    );
 
     if (is_array($result) && !$result['success']) {
         echo json_encode(['status' => 'error', 'message' => $result['message']]);
@@ -82,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
 }
 
 $id = $_GET['id'] ?? '';
-if (!$id || !is_numeric($id)) {
+if (!is_numeric($id)) {
     header('Location: index.php');
     exit;
 }
@@ -97,10 +94,9 @@ include_once("../header.php");
 include_once("../sidebar.php");
 
 $allHobbies = ["Reading","Singing","Yoga","Dancing","Swimming","Writing","Drawing","Painting","Blogging","Traveling","Cricket","Photography","Cooking","Coding","Gaming","Cycling","Skiing"]; 
-$selectedHobbies = explode(',', $user['hobby']);
+$selectedHobbies = array_map('trim', explode(',', $user['hobby']));
+$selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
 ?>
-
-
 
 <div class="container-fluid">
     <div class="row mb-2">
@@ -143,29 +139,49 @@ $selectedHobbies = explode(',', $user['hobby']);
                         </div>
                     </div>
                     <div class="row">
-                    <div class="form-group col-md-2">
-              <small class="form-text text-muted"><b>Current Image:</b></small>
-              <img 
-                src="<?= !empty($user['image_path']) && file_exists(__DIR__ . '/../../' . $user['image_path']) 
-                      ? '../../' . htmlspecialchars($user['image_path']) 
-                      : '../../uploads/default.png' ?>" 
-                alt="Profile" 
-                class="img-thumbnail mt-1 shadow-lg" 
-                style="height: 80px; width: auto;"
-              >
-            </div>
-                        <div class="form-group col-md-5">
+                        <!-- Current Image -->
+                        <div class="form-group col-md-2">
+                            <label class="form-text text-muted d-block"><b>Current Image:</b></label>
+                            <img 
+                            src="<?= !empty($user['image_path']) && file_exists(__DIR__ . '/../../' . $user['image_path']) 
+                                    ? '../../' . htmlspecialchars($user['image_path']) 
+                                    : '../../uploads/default.png' ?>" 
+                            alt="Profile" 
+                            class="img-thumbnail mt-1 shadow" 
+                            style="height: 80px; width: auto;">
+                        </div>
+
+                        <!-- Upload New Image -->
+                        <div class="form-group col-md-4">
                             <label>Profile Image <span class="text-danger">*</span></label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="image_path" accept="image/*">
-                                <label class="custom-file-label">Choose file</label>
+                            <input type="file" class="custom-file-input" name="image_path" id="imageInput" accept="image/*">
+                            <label class="custom-file-label" for="imageInput">Choose file</label>
                             </div>
                         </div>
-                        <div class="form-group col-md-5">
-                            <label>Date of Birth <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control datetimepicker-input" name="DOB" value="<?= $user['DOB'] ?>" autocomplete="off">
+
+                        <!-- Preview + File Name -->
+                        <div class="form-group col-md-2">
+                        <label class="text-muted d-block">Preview :</label>
+                        <div class="d-flex flex-column align-items-center">
+                                <img id="imagePreview" 
+                                    src="../../uploads/default.png" 
+                                    alt="Preview" 
+                                    class="img-thumbnail shadow mb-1" 
+                                    style="max-width: 100px; max-height: 80px;">
+                                <span id="imageName" class="text-muted small" style="display: none;"></span>
+                            </div>
                         </div>
-                    </div>
+                        <div class="form-group col-md-4">
+                            <label for="DOB">Date of Birth <span class="text-danger">*</span></label>
+                            <div class="input-group date" id="dobPicker" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#dobPicker" value="<?= htmlspecialchars($user['DOB']) ?>" name="DOB" placeholder="YYYY-MM-DD" autocomplete="off" />
+                                <div class="input-group-append" data-target="#dobPicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                       
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label>Gender <span class="text-danger">*</span></label>
@@ -183,7 +199,7 @@ $selectedHobbies = explode(',', $user['hobby']);
                             <div class="form-control bg-light" style="height:max-content;">
                                 <?php foreach ($allHobbies as $h): ?>
                                     <div class="form-check form-check-inline">
-                                        <input type="checkbox" name="hobby[]" value="<?= $h ?>" <?= in_array($h, $selectedHobbies) ? 'checked' : '' ?>>
+                                        <input type="checkbox" name="hobby[]" value="<?= $h ?>" <?= in_array(strtolower($h), $selectedHobbiesLower) ? 'checked' : '' ?>>
                                         <label class="form-check-label">&nbsp; <?= $h ?></label>
                                     </div>
                                 <?php endforeach; ?>
@@ -215,6 +231,8 @@ $selectedHobbies = explode(',', $user['hobby']);
     </div>
 </section>
 </div>
+</div>
+
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -224,10 +242,7 @@ $selectedHobbies = explode(',', $user['hobby']);
   $(function () {
     $('#userForm').submit(function (e) {
       e.preventDefault();
-
       var form = this;
-
-      if (!$(form).valid()) return;
 
       var formData = new FormData(form);
       var submitBtn = $(form).find('button[type="submit"]');
@@ -244,9 +259,7 @@ $selectedHobbies = explode(',', $user['hobby']);
         success: function (res) {
           if (res.status === 'success') {
             toastr.success(res.message);
-            setTimeout(function () {
-              window.location.href = 'index.php';
-            }, 1500);
+            setTimeout(() => window.location.href = 'index.php', 1500);
           } else {
             toastr.error(res.message);
           }
@@ -261,6 +274,37 @@ $selectedHobbies = explode(',', $user['hobby']);
     });
   });
 </script>
+<script>
+  $(document).ready(function () {
+    // Initialize custom file input (AdminLTE support)
+    if (typeof bsCustomFileInput !== 'undefined') {
+      bsCustomFileInput.init();
+    }
+
+    $('#imageInput').on('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#imagePreview')
+            .attr('src', e.target.result)
+            .show();
+
+          $('#imageName')
+            .text(file.name)
+            .show();
+        };
+
+        reader.readAsDataURL(file);
+
+        // Update custom label manually (for extra safety)
+        $(this).next('.custom-file-label').text(file.name);
+      }
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
 
 <?php include_once("../footer.php"); ?>

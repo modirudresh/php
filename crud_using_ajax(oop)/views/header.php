@@ -9,18 +9,17 @@
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
 
-<!-- Bootstrap 4.6 (for AdminLTE v3) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap 4.6 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
 
-<!-- AdminLTE and plugin styles -->
-<link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css" />
-<link rel="stylesheet" href="../../dist/css/adminlte.min.css" />
+  <!-- AdminLTE Core & Plugins -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css" />
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css" />
 
-  
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
 
-  <!-- Plugins CSS -->
+  <!-- Plugin Styles -->
   <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
   <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css" />
   <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css" />
@@ -35,8 +34,7 @@
   <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css" />
   <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css" />
 
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
-
+  <!-- Custom Style -->
   <style>
     * {
       box-sizing: border-box;
@@ -119,12 +117,7 @@
       </li>
     </ul>
   </nav>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-
+  
   <!-- Toastr Notification -->
   <?php if (!empty($message)): ?>
     <script src="../../plugins/jquery/jquery.min.js"></script>
@@ -142,8 +135,7 @@
     </script>
   <?php endif; unset($_SESSION['errors'], $_SESSION['status'], $_SESSION['message']); ?>
 
-
-<!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
-  <!-- Sidebar content -->
-</aside>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Sidebar content -->
+  </aside>

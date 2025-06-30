@@ -12,14 +12,11 @@ $controller = new UserController();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id']) && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
     header('Content-Type: application/json');
-    $deleteId = $_POST['delete_id'];
-    $deleted = $controller->deleteUser($deleteId);
-
-    if ($deleted) {
-        echo json_encode(['status' => 'success', 'message' => 'User deleted successfully']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to delete user']);
-    }
+    $deleted = $controller->deleteUser($_POST['delete_id']);
+    echo json_encode([
+        'status' => $deleted ? 'success' : 'error',
+        'message' => $deleted ? 'User deleted successfully' : 'Failed to delete user'
+    ]);
     exit();
 }
 
@@ -31,9 +28,7 @@ include_once("../sidebar.php");
 
 <div class="container-fluid">
     <div class="row mb-2">
-        <div class="col-sm-6">
-            <h1 class="m-0"></h1>
-        </div>
+        <div class="col-sm-6"><h1 class="m-0"></h1></div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="index.php">Home</a></li>
@@ -41,7 +36,6 @@ include_once("../sidebar.php");
             </ol>
         </div>
     </div>
-</div>
 </div>
 
 <section class="content">
@@ -57,15 +51,8 @@ include_once("../sidebar.php");
                 <table id="userTable" class="table table-bordered table-striped table-hover">
                     <thead class="table-dark text-center">
                         <tr>
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Image</th>
-                            <th>Gender</th>
-                            <th>Contact No</th>
-                            <th>Hobby</th>
-                            <th>Actions</th>
+                            <th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Image</th>
+                            <th>Gender</th><th>Contact No</th><th>Hobby</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody class="text-justify">
@@ -77,17 +64,14 @@ include_once("../sidebar.php");
                                     <td><?= htmlspecialchars($User['last_name'] ?? 'NA') ?></td>
                                     <td><?= htmlspecialchars($User['email']) ?></td>
                                     <td style="text-align: center;">
-                                        <img src="<?= (!empty($User['image_path']) && file_exists('../../' . $User['image_path'])) ? '../../' . htmlspecialchars($User['image_path']) : '../../uploads/default.png' ?>"
-                                             alt="Profile" class="img-thumbnail mt-1 shadow-lg"
-                                             style="height: auto; width: 60px; display: inline-block;">
+                                        <img src="<?= (!empty($User['image_path']) && file_exists('../../' . $User['image_path'])) ? '../../' . htmlspecialchars($User['image_path']) : '../../uploads/default.png' ?>" class="img-thumbnail mt-1 shadow-lg" style="width: 60px;">
                                     </td>
                                     <td class="text-center">
                                         <?php
-                                        $gender = $User['gender'];
-                                        echo match ($gender) {
+                                        echo match ($User['gender']) {
                                             'Male' => "<span class='badge badge-primary'>Male</span>",
                                             'Female' => "<span class='badge' style='background-color:pink;'>Female</span>",
-                                            'other' => "<span class='badge badge-secondary'>Other</span>",
+                                            'Other' => "<span class='badge badge-secondary'>Other</span>",
                                             default => "<span>N/A</span>",
                                         };
                                         ?>
@@ -105,15 +89,9 @@ include_once("../sidebar.php");
                                         ?>
                                     </td>
                                     <td>
-                                    <a href="view.php?id=<?= $User['id'] ?>" class="btn btn-sm btn-info">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                    <a href="edit.php?id=<?= $User['id'] ?>" class="btn btn-sm btn-warning">
-                                        <i class="fa fa-pen"></i>
-                                    </a>
-                                    <button class="btn btn-sm btn-danger ajaxDeleteBtn" data-id="<?= $User['id'] ?>">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-info viewUserBtn" data-id="<?= $User['id'] ?>"><i class="fa fa-eye"></i></a>
+                                        <a href="edit.php?id=<?= $User['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
+                                        <button class="btn btn-sm btn-danger ajaxDeleteBtn" data-id="<?= $User['id'] ?>"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -125,37 +103,65 @@ include_once("../sidebar.php");
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white" id="userModalLabel"><i class="fas fa-user mr-2"></i> User Details</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal"><span style="font-size:22px;">&times;</span></button>
+                </div>
+                <div class="modal-body p-3" id="userDetailContent">
+                    <div class="text-center text-muted">Loading...</div>
+                </div>
+                <div class="modal-footer justify-content-between bg-light">
+                    <small class="text-muted">Last Updated: <?= !empty($User['updated_at']) ? date('d M Y, h:i A', strtotime($User['updated_at'])) : 'N/A' ?></small>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 </div>
-
+</div>
 <?php include_once("../footer.php"); ?>
 
-
 <script>
-    $(document).ready(function () {
-        $(document).on('click', '.ajaxDeleteBtn', function () {
-            let userId = $(this).data('id');
-            if (!confirm('Are you sure you want to delete this user?')) return;
-
-            $.ajax({
-                url: 'index.php',
-                type: 'POST',
-                data: { delete_id: userId },
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                success: function (res) {
-                    if (res.status === 'success') {
-                        toastr.success(res.message);
-                        $('#user-row-' + userId).fadeOut(800, function () {
-                            $(this).remove();
-                        });
-                    } else {
-                        toastr.error(res.message);
-                    }
-                },
-                error: function () {
-                    toastr.error('An error occurred');
-                }
-            });
-        });
+$(document).on('click', '.viewUserBtn', function () {
+    const userId = $(this).data('id');
+    $('#userDetailContent').html('<div class="text-center text-muted py-5">Loading...</div>');
+    $('#viewUserModal').modal('show');
+    $.ajax({
+        url: 'view.php',
+        type: 'GET',
+        data: { id: userId },
+        success: function (html) {
+            $('#userDetailContent').html(html);
+        },
+        error: function () {
+            $('#userDetailContent').html('<div class="alert alert-danger">Failed to load user details.</div>');
+        }
     });
+});
+
+$(document).on('click', '.ajaxDeleteBtn', function () {
+    let userId = $(this).data('id');
+    if (!confirm('Are you sure you want to delete this user?')) return;
+    $.ajax({
+        url: 'index.php',
+        type: 'POST',
+        data: { delete_id: userId },
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        success: function (res) {
+            if (res.status === 'success') {
+                toastr.success(res.message);
+                $('#user-row-' + userId).fadeOut(800, function () { $(this).remove(); });
+            } else {
+                toastr.error(res.message);
+            }
+        },
+        error: function () {
+            toastr.error('An error occurred');
+        }
+    });
+});
 </script>

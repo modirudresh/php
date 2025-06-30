@@ -5,12 +5,10 @@
       const input = toggle.closest(".input-group").querySelector(".password");
       if (input.type === "password") {
         input.type = "text";
-        toggle.classList.remove("fa-eye");
-        toggle.classList.add("fa-eye-slash");
+        toggle.classList.replace("fa-eye", "fa-eye-slash");
       } else {
         input.type = "password";
-        toggle.classList.remove("fa-eye-slash");
-        toggle.classList.add("fa-eye");
+        toggle.classList.replace("fa-eye-slash", "fa-eye");
       }
     });
   });
@@ -25,8 +23,6 @@
   </div>
 </footer>
 
-<!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark"></aside>
 </div> <!-- Close wrapper -->
 
 <!-- Core Libraries -->
@@ -35,27 +31,16 @@
 <script>$.widget.bridge('uibutton', $.ui.button);</script>
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-
-<!-- Bootstrap 4 JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <!-- Plugins -->
 <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="../../plugins/toastr/toastr.min.js"></script>
 <script src="../../plugins/moment/moment.min.js"></script>
 <script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="../../plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="../../plugins/jquery-validation/additional-methods.min.js"></script>
 
-<!-- DataTables & Plugins CSS -->
-<link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
-<!-- DataTables & Plugins JS -->
+<!-- DataTables JS -->
 <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -68,20 +53,15 @@
 <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
 
-<!-- AdminLTE -->
+<!-- AdminLTE Scripts -->
 <script src="../../dist/js/adminlte.js"></script>
-<!-- Optional Demo Scripts -->
 <script src="../../dist/js/demo.js"></script>
 <script src="../../dist/js/pages/dashboard.js"></script>
 
-<!-- jQuery Validation -->
-<script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
-<script src="../../plugins/jquery-validation/additional-methods.min.js"></script>
-
-<!-- Initialize DataTable -->
+<!-- Initialize DataTables -->
 <script>
-  $(function () {
-    $('#userTable').DataTable({
+  function initializeTable(selector, columnDefs) {
+    const table = $(selector).DataTable({
       responsive: true,
       lengthChange: true,
       autoWidth: false,
@@ -89,10 +69,9 @@
       info: true,
       paging: true,
       searching: true,
-      columnDefs: [
-        { orderable: false, targets: [4, 8] } // Disable ordering on Image and Actions columns
-      ],
-      buttons: ["copy", "csv", "excel", "pdf", "print", "colvis",
+      columnDefs: columnDefs,
+      buttons: [
+        "copy", "csv", "excel", "pdf", "print", "colvis",
         {
           text: 'Reset',
           action: function () {
@@ -100,55 +79,34 @@
           }
         }
       ]
-    }).buttons().container().appendTo('#userTable_wrapper .col-md-6:eq(0)');
+    });
 
-    // Initialize bsCustomFileInput
+    table.buttons().container().appendTo(selector + '_wrapper .col-md-6:eq(0)');
+  }
+
+  $(function () {
+    // Initialize both tables
+    if ($('#userTable').length) {
+      initializeTable('#userTable', [{ orderable: false, targets: [4, 8] }]);
+    }
+
+    if ($('#studentTable').length) {
+      initializeTable('#studentTable', [{ orderable: false, targets: [3, 6] }]);
+    }
+
     bsCustomFileInput.init();
 
-    window.openDeleteModal = function(id) {
-    var modal = new bootstrap.Modal(document.getElementById('deleteModal' + id));
-    modal.show();
+    window.openDeleteModal = function (id) {
+      var modal = new bootstrap.Modal(document.getElementById('deleteModal' + id));
+      modal.show();
     };
   });
 </script>
 
-<!-- Initialize DataTable -->
+<!-- jQuery Validation and Date Picker -->
 <script>
   $(function () {
-    $('#studentTable').DataTable({
-      responsive: true,
-      lengthChange: true,
-      autoWidth: false,
-      ordering: true,
-      info: true,
-      paging: true,
-      searching: true,
-      columnDefs: [
-        { orderable: false, targets: [3, 6] } // Disable ordering on Image and Actions columns
-      ],
-      buttons: ["copy", "csv", "excel", "pdf", "print", "colvis",
-        {
-          text: 'Reset',
-          action: function () {
-            location.reload();
-          }
-        }
-      ]
-    }).buttons().container().appendTo('#userTable_wrapper .col-md-6:eq(0)');
-
-    // Initialize bsCustomFileInput
-    bsCustomFileInput.init();
-
-    window.openDeleteModal = function(id) {
-    var modal = new bootstrap.Modal(document.getElementById('deleteModal' + id));
-    modal.show();
-    };
-  });
-</script>
-<!-- Custom Validation and UI Scripts -->
-<script>
-  $(function () {
-    $.validator.addMethod('pattern', function(value, element, param) {
+    $.validator.addMethod('pattern', function (value, element, param) {
       return this.optional(element) || param.test(value);
     }, 'Invalid format.');
 
@@ -158,7 +116,7 @@
         last_name: { required: true, minlength: 3, pattern: /^[A-Za-z\s'-]+$/ },
         email: { required: true, email: true },
         phone_no: { required: true, digits: true, minlength: 10, maxlength: 10, pattern: /^[6-9]\d{9}$/ },
-        password: { required: true, minlength: 8, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/ },
+        password: { required: true, minlength: 8, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/ },
         confirm_password: { required: true, equalTo: '#password' },
         DOB: { required: true, date: true },
         gender: { required: true },
@@ -245,9 +203,6 @@
   });
 </script>
 
-
-
-
 <?php if (!empty($message)) : ?>
 <script>
   $(function () {
@@ -269,6 +224,7 @@
 </script>
 <?php endif; ?>
 
+<!-- Inline Style for Validation -->
 <style>
   .is-valid { border: 2px solid #28a745; }
   .is-invalid { border: 2px solid #dc3545; }

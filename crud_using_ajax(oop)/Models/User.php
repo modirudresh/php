@@ -116,11 +116,13 @@ class User {
     }
 
     public function read() {
-        $sql = "SELECT * FROM `User`";
+        $sql = "SELECT * FROM `User` ORDER BY created_at DESC";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    
 
     public function readById($id) {
         $sql = "SELECT * FROM `User` WHERE id = :id";
