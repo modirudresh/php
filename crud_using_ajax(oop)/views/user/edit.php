@@ -4,9 +4,10 @@ include_once("editaction.php");
 include_once("../header.php");
 include_once("../sidebar.php");
 
-$allHobbies = ["Reading","Singing","Yoga","Dancing","Swimming","Writing","Drawing","Painting","Blogging","Traveling","Cricket","Photography","Cooking","Coding","Gaming","Cycling","Skiing"]; 
+$allHobbies = ["Reading","Singing","Yoga","Dancing","Swimming","Writing","Drawing","Painting","Blogging","Travelling","Cricket","Photography","Cooking","Coding","Gaming","Cycling","Skiing"]; 
 $selectedHobbies = array_map('trim', explode(',', $user['hobby']));
-$selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
+$selectedHobbiesMap = array_map('strtolower', $selectedHobbies);
+
 ?>
 
 <div class="container-fluid">
@@ -46,7 +47,9 @@ $selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
                         </div>
                         <div class="form-group col-md-6">
                             <label>Phone <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="phone_no" value="<?= htmlspecialchars($user['phone_no']) ?>" maxlength="10">
+                            <input type="text" class="form-control" name="phone_no" 
+                            value="<?= !empty($user['phone_no']) ? htmlspecialchars($user['phone_no']) : '' ?>"                  
+                            maxlength="10">
                         </div>
                     </div>
                     <div class="row">
@@ -94,24 +97,25 @@ $selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
                         </div>
                     </div>                       
                     <div class="row">
-                        <div class="form-group col-md-6">
-                            <label>Gender <span class="text-danger">*</span></label>
-                            <div class="form-control bg-light" style="height:max-content;">
-                                <?php foreach (['Male', 'Female', 'Other'] as $g): ?>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-control" type="radio" name="gender" value="<?= $g ?>" <?= $user['gender'] === $g ? 'checked' : '' ?>>
-                                        <label class="form-check-label">&nbsp;<?= ucfirst($g) ?></label>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+                    <div class="form-group col-md-6">
+                        <label>Gender <span class="text-danger">*</span></label>
+                        <div class="form-control bg-light" style="height:max-content;">
+                            <?php foreach (['Male', 'Female', 'Other'] as $g): ?>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-control" type="radio" name="gender" value="<?= $g ?>" <?= $user['gender'] === $g ? 'checked' : '' ?>>
+                                    <label class="form-check-label">&nbsp;<?= strtoupper($g) ?></label>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
+                    </div>
+
                         <div class="form-group col-md-6">
                             <label>Hobbies <span class="text-danger">*</span></label>
                             <div class="form-control bg-light" style="height:max-content;">
                                 <?php foreach ($allHobbies as $h): ?>
                                     <div class="form-check form-check-inline">
-                                        <input type="checkbox" name="hobby[]" value="<?= $h ?>" <?= in_array(strtolower($h), $selectedHobbiesLower) ? 'checked' : '' ?>>
-                                        <label class="form-check-label">&nbsp; <?= $h ?></label>
+                                    <input type="checkbox" name="hobby[]" value="<?= $h ?>" <?= in_array(strtolower($h), array_map('strtolower', $selectedHobbies)) ? 'checked' : '' ?>>
+                                    <label class="form-check-label">&nbsp; <?= $h ?></label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -120,7 +124,7 @@ $selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label>Address <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="address"><?= htmlspecialchars($user['address']) ?></textarea>
+                            <textarea class="form-control" name="address"><?= !empty($user['address']) ? htmlspecialchars($user['address']) : '' ?></textarea>
                         </div>
                         <div class="form-group col-md-6">
                             <label>Country <span class="text-danger">*</span></label>
@@ -149,12 +153,45 @@ $selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
+
 <script>
   $(function () {
+    $('#userForm').validate({
+      rules: {
+        first_name: { required: true },
+        last_name: { required: true },
+        email: { required: true, email: true },
+        phone_no: { required: true, digits: true, minlength: 10, maxlength: 10 },
+        address: { required: true },
+        DOB: { required: true, dateISO: true },
+        gender: { required: true },
+        'hobby[]': { required: true },
+        country: { required: true }
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        if (element.attr("type") === "radio" || element.attr("type") === "checkbox") {
+          element.closest('.form-control').append(error);
+        } else {
+          element.closest('.form-group').append(error);
+        }
+      },
+      highlight: function (element) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element) {
+        $(element).removeClass('is-invalid');
+      }
+    });
+
     $('#userForm').submit(function (e) {
       e.preventDefault();
-      var form = this;
 
+      if (!$(this).valid()) return;
+
+      var form = this;
       var formData = new FormData(form);
       var submitBtn = $(form).find('button[type="submit"]');
 
@@ -185,6 +222,7 @@ $selectedHobbiesLower = array_map('strtolower', $selectedHobbies);
     });
   });
 </script>
+
 <script>
   $(document).ready(function () {
     // Initialize custom file input (AdminLTE support)

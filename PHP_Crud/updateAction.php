@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $hobbyStr = implode(', ', $hobbies);
 
-  // Handle image upload if a new file is provided
   if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === UPLOAD_ERR_OK) {
     $uploadDir = './uploads/';
     $fullUploadDir = __DIR__ . '/' . $uploadDir;
@@ -105,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
   modal.show();
 
-  // Automatically close the modal after 1.5 seconds and redirect if successful
   setTimeout(() => {
     modal.hide();
     <?php if ($status === 'success'): ?>

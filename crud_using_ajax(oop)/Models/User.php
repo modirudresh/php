@@ -116,7 +116,7 @@ class User {
     }
 
     public function read() {
-        $sql = "SELECT * FROM `User` ORDER BY created_at DESC";
+        $sql = "SELECT * FROM `User` ORDER BY id DESC";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

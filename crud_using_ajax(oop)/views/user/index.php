@@ -26,7 +26,7 @@ include_once("../sidebar.php");
                 </div>
             </div>
             <div class="card-body">
-                <table id="userTable" class="table table-bordered table-striped table-hover">
+                <table id="userTable" class="table table-bordered table-striped table-hover text-center">
                     <thead class="table-dark text-center">
                         <tr>
                             <th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Image</th>
@@ -37,41 +37,41 @@ include_once("../sidebar.php");
                         <?php if (!empty($users)): ?>
                             <?php foreach ($users as $User): ?>
                                 <tr id="user-row-<?= $User['id'] ?>">
-                                    <td><?= htmlspecialchars($User['id']) ?></td>
-                                    <td><?= htmlspecialchars($User['first_name']) ?></td>
-                                    <td><?= htmlspecialchars($User['last_name'] ?? 'NA') ?></td>
-                                    <td><?= htmlspecialchars($User['email']) ?></td>
-                                    <td style="text-align: center;">
-                                        <img src="<?= (!empty($User['image_path']) && file_exists('../../' . $User['image_path'])) ? '../../' . htmlspecialchars($User['image_path']) : '../../uploads/default.png' ?>" class="img-thumbnail mt-1 shadow-lg" style="width: 60px;">
-                                    </td>
-                                    <td class="text-center">
-                                        <?php
-                                        echo match ($User['gender']) {
-                                            'Male' => "<span class='badge badge-primary'>Male</span>",
-                                            'Female' => "<span class='badge' style='background-color:pink;'>Female</span>",
-                                            'Other' => "<span class='badge badge-secondary'>Other</span>",
-                                            default => "<span>N/A</span>",
-                                        };
-                                        ?>
-                                    </td>
-                                    <td><?= htmlspecialchars($User['phone_no']) ?></td>
-                                    <td>
-                                        <?php
-                                        if (!empty($User['hobby'])) {
-                                            foreach (explode(',', $User['hobby']) as $hobby) {
-                                                echo "<span class='badge badge-info w-100'>" . htmlspecialchars(trim($hobby)) . "</span><br>";
-                                            }
-                                        } else {
-                                            echo 'N/A';
+                                <td><?= !empty($User['id']) ? htmlspecialchars($User['id']) : 'NA' ?></td>
+                                <td><?= !empty($User['first_name']) ? htmlspecialchars($User['first_name']) : 'NA' ?></td>
+                                <td><?= !empty($User['last_name']) ? htmlspecialchars($User['last_name']) : 'NA' ?></td>
+                                <td><?= !empty($User['email']) ? htmlspecialchars($User['email']) : 'NA' ?></td>
+                                <td style="text-align: center;">
+                                    <img src="<?= (!empty($User['image_path']) && file_exists('../../' . $User['image_path'])) ? '../../' . htmlspecialchars($User['image_path']) : '../../uploads/default.png' ?>" class="img-thumbnail mt-1 shadow-lg" style="width: 60px;">
+                                </td>
+                                <td class="text-center">
+                                    <?php
+                                    echo match ($User['gender'] ?? null) {
+                                        'Male' => "<span class='badge badge-primary'>Male</span>",
+                                        'Female' => "<span class='badge' style='background-color:pink;'>Female</span>",
+                                        'Other' => "<span class='badge badge-secondary'>Other</span>",
+                                        default => "<span>NA</span>",
+                                    };
+                                    ?>
+                                </td>
+                                <td><?= !empty($User['phone_no']) ? htmlspecialchars($User['phone_no']) : 'NA' ?></td>
+                                <td>
+                                    <?php
+                                    if (!empty($User['hobby'])) {
+                                        foreach (explode(',', $User['hobby']) as $hobby) {
+                                            echo "<span class='badge badge-info w-100'>" . htmlspecialchars(trim($hobby)) . "</span><br>";
                                         }
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="btn btn-sm btn-info viewUserBtn" data-id="<?= $User['id'] ?>"><i class="fa fa-eye"></i></a>
-                                        <a href="edit.php?id=<?= $User['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
-                                        <button class="btn btn-sm btn-danger ajaxDeleteBtn" data-id="<?= $User['id'] ?>"><i class="fa fa-trash"></i></button>
-                                    </td>
-                                </tr>
+                                    } else {
+                                        echo 'NA';
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-sm btn-info viewUserBtn" data-id="<?= $User['id'] ?>"><i class="fa fa-eye"></i></a>
+                                    <a href="edit.php?id=<?= $User['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
+                                    <button class="btn btn-sm btn-danger ajaxDeleteBtn" data-id="<?= $User['id'] ?>"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr><td colspan="10" class="text-center">No users found.</td></tr>

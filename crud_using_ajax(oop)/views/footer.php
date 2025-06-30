@@ -123,7 +123,7 @@
         'hobby[]': { required: true, minlength: 1 },
         address: { required: true, minlength: 10, pattern: /^[A-Za-z0-9\s,.'-]{10,}$/ },
         country: { required: true },
-        image_path: {
+        image_path: { 
           required: function () {
             return window.location.pathname.includes('create.php');
           },

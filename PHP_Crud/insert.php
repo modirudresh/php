@@ -2,7 +2,6 @@
 session_start();
 $formData = $_SESSION['form_data'] ?? [];
 unset($_SESSION['form_data']);
-include("sidebar.html");
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require("config.php");
 
-$result = mysqli_query($con, "SELECT * FROM users");
+$result = mysqli_query($con, "SELECT * FROM users ORDER BY id DESC");
 ?>
 
 <!DOCTYPE html>
