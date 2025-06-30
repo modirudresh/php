@@ -3,7 +3,7 @@
 $host = 'localhost';
 $user = 'root';
 $pass = 'admin123';
-$dbname = 'PHP_CRUD';
+$dbname = 'Basic_crud_LTE';
 
 
 $con = new mysqli($host, $user, $pass, $dbname);

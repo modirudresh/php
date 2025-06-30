@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $stmt = $con->prepare("SELECT id, first_name, last_name, email, password FROM User WHERE email = ?");
+    $stmt = $con->prepare("SELECT id, first_name, last_name, email, password FROM User_data WHERE email = ?");
     if ($stmt) {
         $stmt->bind_param("s", $email);
         $stmt->execute();

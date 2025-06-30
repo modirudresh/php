@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formData = compact('firstName', 'lastName', 'email', 'address', 'dob', 'phone', 'gender', 'hobbies', 'country');
 
     if (empty($errors)) {
-        $checkStmt = $con->prepare("SELECT id FROM User WHERE email = ?");
+        $checkStmt = $con->prepare("SELECT id FROM User_data WHERE email = ?");
         $checkStmt->bind_param("s", $email);
         $checkStmt->execute();
         $checkStmt->store_result();

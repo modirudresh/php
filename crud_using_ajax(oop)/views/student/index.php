@@ -73,6 +73,7 @@ include_once("../sidebar.php");
 </div>
 </div>
 
+<?php include_once("../footer.php"); ?>
 
 <script>
 $(document).on('click', '.viewStudentBtn', function () {
@@ -114,4 +115,3 @@ $(document).on('click', '.ajaxDeleteBtn', function () {
     });
 });
 </script>
-<?php include_once("../footer.php"); ?>

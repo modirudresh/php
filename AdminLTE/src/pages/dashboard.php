@@ -39,7 +39,7 @@ include('./Dashboard_sidebar.php');
             <h3>
               <?php 
               if (isset($con)) {
-                $result = $con->query("SELECT COUNT(*) AS total_users FROM User");
+                $result = $con->query("SELECT COUNT(*) AS total_users FROM User_data");
                 echo htmlspecialchars($result ? $result->fetch_assoc()['total_users'] : 0);
                 if ($result) $result->free();
               } else {
@@ -62,7 +62,7 @@ include('./Dashboard_sidebar.php');
             <h3>
               <?php 
               if (isset($con)) {
-                $result = $con->query("SELECT COUNT(*) AS total_users FROM User");
+                $result = $con->query("SELECT COUNT(*) AS total_users FROM User_data");
                 echo htmlspecialchars($result ? $result->fetch_assoc()['total_users'] : 0);
                 if ($result) $result->free();
               } else {
@@ -85,7 +85,7 @@ include('./Dashboard_sidebar.php');
             <h3>
               <?php 
               if (isset($con)) {
-                $result = $con->query("SELECT COUNT(*) AS total_users FROM User");
+                $result = $con->query("SELECT COUNT(*) AS total_users FROM User_data");
                 echo htmlspecialchars($result ? $result->fetch_assoc()['total_users'] : 0);
                 if ($result) $result->free();
               } else {
@@ -108,7 +108,7 @@ include('./Dashboard_sidebar.php');
             <h3>
               <?php 
               if (isset($con)) {
-                $result = $con->query("SELECT COUNT(*) AS total_users FROM User");
+                $result = $con->query("SELECT COUNT(*) AS total_users FROM User_data");
                 echo htmlspecialchars($result ? $result->fetch_assoc()['total_users'] : 0);
                 if ($result) $result->free();
               } else {

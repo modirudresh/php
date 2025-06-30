@@ -115,38 +115,47 @@ $(function () {
   }, 'Invalid format.');
 
   $('#userForm').validate({
-    rules: {
-      email: { required: true, email: true },
-      password: {
-        required: true,
-        minlength: 8,
-        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-      },
-      confirm_password: { required: true, equalTo: '#password' },
-      terms: { required: true }
+  rules: {
+    email: { required: true, email: true },
+    password: {
+      required: true,
+      minlength: 8,
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
     },
-    messages: {
-      email: { required: "Email is required", email: "Enter valid email" },
-      password: {
-        required: "Password is required",
-        minlength: "Minimum 8 characters",
-        pattern: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
-      },
-      confirm_password: { required: "Please retype your password", equalTo: "Passwords do not match" },
-      terms: { required: "Accept terms" }
+    confirm_password: { required: true, equalTo: '#password' },
+    terms: { required: true }
+  },
+  messages: {
+    email: {
+      required: "Email is required",
+      email: "Invalid email/password."
     },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.input-group').append(error);
+    password: {
+      required: "Password is required",
+      minlength: "Minimum 8 characters",
+      pattern: "Invalid email/password."
     },
-    highlight: function (element) {
-      $(element).addClass('is-invalid');
+    confirm_password: {
+      required: "Please retype your password",
+      equalTo: "Passwords do not match"
     },
-    unhighlight: function (element) {
-      $(element).removeClass('is-invalid').addClass('is-valid');
+    terms: {
+      required: "Accept terms"
     }
-  });
+  },
+  errorElement: 'span',
+  errorPlacement: function (error, element) {
+    error.addClass('invalid-feedback');
+    element.closest('.input-group').append(error);
+  },
+  highlight: function (element) {
+    $(element).addClass('is-invalid');
+  },
+  unhighlight: function (element) {
+    $(element).removeClass('is-invalid').addClass('is-valid');
+  }
+});
+
 });
 </script>
 <script>

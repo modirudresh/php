@@ -20,8 +20,8 @@ error_reporting(E_ALL);
       <?php            if (isset($_SESSION['user_name'])) {?>
         <div class="user-panel mt-3 mb-3 d-flex">
         <div class="image">
-        <?php if (!empty($res['image_path']) && file_exists(__DIR__ . '/user/' . $res['image_path'])): ?>
-          <img src="./user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:25px; border-radius:50%;">
+        <?php if (!empty($response['image_path']) && file_exists(__DIR__ . '/user/' . $response['image_path'])): ?>
+          <img src="./user/<?= htmlspecialchars($response['image_path']) ?>" alt="Profile" style="width:25px; height:25px; border-radius:50%;">
         <?php else: ?>
           <img src="../assets/img/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
         <?php endif; ?>

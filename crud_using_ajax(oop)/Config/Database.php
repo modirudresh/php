@@ -9,7 +9,7 @@ class Database {
     private $host = "localhost";
     private $user = "root";
     private $password = "admin123";
-    private $database = "PHP_CRUD";
+    private $database = "AJAX_CRUD";
     private $connection;
 
     public function connect() {

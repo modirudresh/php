@@ -134,7 +134,7 @@ unset($_SESSION['message'], $_SESSION['status']);
     <li class="nav-item dropdown">
       <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
         <?php if (!empty($res['image_path']) && file_exists(__DIR__ . '/user/' . $res['image_path'])): ?>
-          <img src="./user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:auto; border-radius:50%;" />
+          <img src="../../user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:auto; border-radius:50%;" />
         <?php else: ?>
           <img src="../../assets/img/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;" />
         <?php endif; ?>
