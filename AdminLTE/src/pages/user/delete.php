@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
     $stmt->fetch();
     $stmt->close();
 
-    $stmt = $con->prepare("DELETE FROM User WHERE id = ?");
+    $stmt = $con->prepare("DELETE FROM User_data WHERE id = ?");
     $stmt->bind_param("i", $id);
   
     if ($stmt->execute()) {

@@ -79,7 +79,7 @@ include("sidebar.html");
         </div>
       </div>
       <div class="box">
-        <label>Hobbies <span style="font-size:10px;color:gray; font:normal;">(Select at least one)</span></label>
+        <label>Hobbies<span style="color:red;">*</span> <span style="font-size:10px;color:gray; font:normal;">(Select at least one)</span></label>
         <div class="hobby">
           <?php
           $hobbies = [

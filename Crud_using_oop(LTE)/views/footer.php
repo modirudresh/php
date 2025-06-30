@@ -85,12 +85,12 @@
       responsive: true,
       lengthChange: true,
       autoWidth: false,
-      ordering: true,
+      ordering: false,
       info: true,
       paging: true,
       searching: true,
       columnDefs: [
-        { orderable: false, targets: [4, 8] } // Disable ordering on Image and Actions columns
+        { orderable: false, targets: [4, 8] }
       ],
       buttons: ["copy", "csv", "excel", "pdf", "print", "colvis",
         {
@@ -119,7 +119,7 @@
       responsive: true,
       lengthChange: true,
       autoWidth: false,
-      ordering: true,
+      ordering: false,
       info: true,
       paging: true,
       searching: true,
@@ -221,6 +221,7 @@
       },
       highlight: function (element) {
         $(element).addClass('is-invalid');
+        $(element).closest('.form-group').find('.bg-light').addClass('is-invalid');
       },
       unhighlight: function (element) {
         $(element).removeClass('is-invalid').addClass('is-valid');

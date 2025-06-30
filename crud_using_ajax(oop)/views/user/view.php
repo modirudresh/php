@@ -1,26 +1,7 @@
 <?php
-session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-require_once __DIR__ . '/../../Controllers/UserController.php';
-use Controllers\UserController;
-
-$controller = new UserController();
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $user = $controller->getUser($_GET['id']);
-    if (!$user) {
-        echo '<div class="alert alert-danger">User not found.</div>';
-        exit;
-    }
-} else {
-    echo '<div class="alert alert-danger">Invalid request.</div>';
-    exit;
-}
+include_once("viewaction.php");
 ?>
-
 <div class="container-fluid py-3">
   <div class="row">
     
@@ -62,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && is_numeric($_G
           <tr>
             <th>Gender</th>
             <td>
-              <span class="badge <?= $user['gender'] === 'male' ? 'badge-primary' : ($user['gender'] === 'female' ? 'badge-info' : 'badge-secondary') ?>">
+              <span class="badge <?= $user['gender'] === 'Male' ? 'badge-primary' : ($user['gender'] === 'Female' ? 'badge-info' : 'badge-secondary') ?>">
                 <?= !empty($user['gender']) ? htmlspecialchars(ucfirst($user['gender'])) : 'N/A' ?>
               </span>
             </td>
@@ -88,13 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && is_numeric($_G
               }
               ?>
             </td>
-          </tr>
-          <?php if (!empty($user['created_at'])): ?>
-            <tr>
-              <th>Created At</th>
-              <td><?= date('d M Y, h:i A', strtotime($user['created_at'])) ?></td>
             </tr>
-          <?php endif; ?>
         </tbody>
       </table>
     </div>

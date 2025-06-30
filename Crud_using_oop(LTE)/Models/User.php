@@ -15,7 +15,7 @@ class User {
     }
 
     public function emailExists($email, $excludeId = null) {
-        $sql = "SELECT COUNT(*) FROM `User` WHERE email = :email";
+        $sql = "SELECT COUNT(*) FROM `user` WHERE email = :email";
         if ($excludeId !== null) {
             $sql .= " AND id != :id";
         }
@@ -41,7 +41,7 @@ class User {
         $formatted_dob = date('Y-m-d', strtotime($DOB));
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO `User` (first_name, last_name, email, image_path, phone_no, address, password, DOB, gender, hobby, country) 
+        $sql = "INSERT INTO `user` (first_name, last_name, email, image_path, phone_no, address, password, DOB, gender, hobby, country) 
                 VALUES (:first_name, :last_name, :email, :image_path, :phone_no, :address, :password, :DOB, :gender, :hobby, :country)";
 
         $stmt = $this->connection->prepare($sql);
@@ -72,7 +72,7 @@ class User {
 
         $formatted_dob = date('Y-m-d', strtotime($DOB));
 
-        $sql = "UPDATE `User` SET 
+        $sql = "UPDATE `user` SET 
                     first_name = :first_name,
                     last_name = :last_name,
                     email = :email,
@@ -109,24 +109,30 @@ class User {
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM `User` WHERE id = :id";
+        $sql = "DELETE FROM `user` WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
     public function read() {
-        $sql = "SELECT * FROM `User`";
+        $sql = "SELECT * FROM `user` ORDER BY id DESC";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function readById($id) {
-        $sql = "SELECT * FROM `User` WHERE id = :id";
+        $sql = "SELECT * FROM `user` WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function countAll() {
+        $sql = "SELECT COUNT(*) as total FROM `user`";
+        $stmt = $this->connection->query($sql);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
     }
 }

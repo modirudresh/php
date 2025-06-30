@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (empty($errors)) {
         $stmt = $con->prepare("
-            UPDATE User 
+            UPDATE User_data 
             SET 
                 first_name = ?, 
                 last_name = ?, 

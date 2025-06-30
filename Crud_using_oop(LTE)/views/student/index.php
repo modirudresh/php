@@ -1,28 +1,6 @@
 <?php
-session_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once __DIR__ . '/../../Controllers/StudentController.php';
-use Controllers\StudentController;
-
-$controller = new StudentController();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
-    $deleteId = $_POST['delete_id'];
-    $deleted = $controller->deleteStudent($deleteId);
-    if ($deleted) {
-        $_SESSION['success'] = "Student deleted successfully";
-    } else {
-        $_SESSION['error'] = "Failed to delete student.";
-    }
-    header("Location: index.php");
-    exit();
-}
-
-$students = $controller->index();
+include_once("indexaction.php");
 include_once("../header.php");
 include_once("../sidebar.php");
 ?>
@@ -69,7 +47,7 @@ include_once("../sidebar.php");
                 </div>
             </div>
             <div class="card-body">
-                <table id="studentTable" class="table table-bordered table-striped table-hover">
+                <table id="studentTable" class="table table-bordered table-striped table-hover text-center">
                     <thead class="table-dark text-center">
                         <tr>
                             <th>ID</th>

@@ -99,24 +99,7 @@
         </a>
       </li>
 
-      <!-- Profile Dropdown -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-          <img src="../../uploads/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
-          <i class="fas fa-angle-down ml-1"></i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right p-2" style="min-width: 220px;">
-          <span class="dropdown-item-text text-sm text-muted">Hello, Student</span>
-          <div class="dropdown-divider"></div>
-          <a href="change_password.php" class="dropdown-item">
-            <i class="fas fa-key mr-2"></i> Change Password
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="logout.php" class="dropdown-item">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-          </a>
-        </div>
-      </li>
+      
     </ul>
   </nav>
 

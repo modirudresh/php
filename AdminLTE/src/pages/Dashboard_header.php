@@ -140,9 +140,9 @@ unset($_SESSION['errors'], $_SESSION['status'], $_SESSION['message']);
     <li class="nav-item dropdown">
       <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
         <?php if (!empty($res['image_path']) && file_exists(__DIR__ . '/user/' . $res['image_path'])): ?>
-          <img src="./user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
+          <img src="../user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:25px; height:25px; object-fit:contain; border-radius:50%;">
         <?php else: ?>
-          <img src="../assets/img/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
+          <img src="../../assets/img/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
         <?php endif; ?>
         <i class="fas fa-angle-down ml-1"></i>
       </a>

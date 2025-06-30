@@ -232,31 +232,26 @@ include_once("../sidebar.php");
           </div>
 
           <div class="row">
-            <div class="form-group col-md-6">
-              <label class="d-block">Gender <span class="text-danger">*</span></label>
-              <div class="bg-light p-3 rounded shadow-sm">
-                <?php
-                $genders = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'];
-                foreach ($genders as $key => $label) {
-                    $checked = ($formData['gender'] === $key) ? 'checked' : '';
-                    echo "<div class='form-check form-check-inline mr-3'>
-                            <input class='form-check-input' type='radio' name='gender' id='gender_$key' value='$key' $checked>
-                            <label class='form-check-label' for='gender_$key'>$label</label>
-                          </div>";
-                }
-                ?>
-              </div>
-            </div>
+          <div class="form-group col-md-6">
+          <label>Gender <span class="text-danger">*</span></label>
+             <div class="form-control bg-light" style="height:max-content;">
+                <?php foreach (['male', 'female', 'other'] as $g): ?>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-control" type="radio" name="gender" value="<?= $g ?>" <?= $formData['gender'] === $g ? 'checked' : '' ?>>
+                                        <label class="form-check-label">&nbsp;<?= ucfirst($g) ?></label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>                  
 
             <div class="form-group col-md-6">
-              <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
-              <div class="bg-light p-3 rounded shadow-sm">
-                <?php
-                foreach ($allHobbies as $hobby) {
+              <label>Hobbies <span class="text-danger">*</span> <small class="text-muted">(Select at least one)</small></label><br>
+              <div class="form-control bg-light" style="height:max-content;">
+                <?php foreach ($allHobbies as $hobby) {
                     $checked = in_array($hobby, $selectedHobbies) ? 'checked' : '';
                     echo "<div class='form-check form-check-inline'>
-                            <input class='form-check-input' type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
-                            <label class='form-check-label'>" . htmlspecialchars($hobby) . "</label>
+                            <input type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
+                            <label class='form-check-label ml-1'>" . htmlspecialchars($hobby) . "</label>
                           </div>";
                 }
                 ?>

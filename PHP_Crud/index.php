@@ -35,13 +35,6 @@ $result = mysqli_query($con, "SELECT * FROM users");
           </th>
           <th>Email Address</th>
           <th>Profile Picture</th>
-          <th>
-            Address
-            <h4 style="font-size: 11px; color: #6c757d; margin-top: 5px;">
-              <em>Click <span style="color: #0d6efd; font-weight: 500;">View</span> for details</em>
-            </h4>
-          </th>
-          <th>Country</th>
           <th>Date of Birth</th>
           <th>Phone Number</th>
           <th>Gender</th>
@@ -54,8 +47,7 @@ $result = mysqli_query($con, "SELECT * FROM users");
           <tr>
             <td><?= htmlspecialchars($res['id']) ?></td>
             <td style="max-width:100px;">
-              <?= htmlspecialchars($res['first_name']) ?><br>
-              <?= htmlspecialchars($res['last_name']) ?>
+              <?= htmlspecialchars($res['first_name']) ?>   -           <?= htmlspecialchars($res['last_name']) ?>
             </td>
             <td style="width:100px;"><?= htmlspecialchars($res['email']) ?></td>
             <td>
@@ -65,15 +57,6 @@ $result = mysqli_query($con, "SELECT * FROM users");
                 <img src="./uploads/default.png" alt="No Profile Picture" style="width:50px; height:50px; object-fit:cover; border-radius:12px;" />
               <?php endif; ?>
             </td>
-            <td style="max-width:140px;">
-              <?php
-                $address = $res['address'];
-                $shortAddress = strlen($address) > 20 ? substr($address, 0, 20) . '...' : $address;
-                $titleAttr = strlen($address) > 20 ? ' title="' . htmlspecialchars($address) . '"' : '';
-              ?>
-              <span<?= $titleAttr ?>><?= nl2br(htmlspecialchars($shortAddress)) ?></span>
-            </td>
-            <td style="width:80px;"><?= htmlspecialchars(strtoupper($res['country'])) ?></td>
             <td style="width:180px;"><?= htmlspecialchars($res['DOB']) ?></td>
             <td style="width:180px;">
               <?php
@@ -104,7 +87,7 @@ $result = mysqli_query($con, "SELECT * FROM users");
                 foreach ($hobbies as $hobby) {
                   $hobby = trim($hobby);
                   if ($hobby !== '') {
-                    echo "<span style='display:inline-block; background-color:#e0e0e0; color:#333; padding:3px 6px; margin:1px; border-radius:5px; border:1px solid black; font-size:10px;'>"
+                    echo "<span style='display:inline-block; background-color:#e0e0e0; color:#333; padding:3px 6px; margin:1px; border-radius:5px; border:1px solid black; font-size:10px; width:85%;'>"
                          . htmlspecialchars($hobby) . "</span>";
                   }
                 }

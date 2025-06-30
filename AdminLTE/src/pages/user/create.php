@@ -12,8 +12,8 @@ $status = $_SESSION['status'] ?? '';
 $message = $_SESSION['message'] ?? '';
 ?>
 <?php
-include('../../header.php');
-include('../../sidebar.php');
+include('../header.php');
+include('../sidebar.php');
 ?>
 
       <div class="container-fluid">
@@ -119,22 +119,25 @@ include('../../sidebar.php');
               </div>
 
               <div class="row">
-                <div class="form-group col-md-6">
+              <div class="form-group col-md-6">
                   <label>Gender <span class="text-danger">*</span></label><br>
+                  <div class="bg-light form-control rounded shadow-sm" style="height:max-content;">
                   <?php
-                  $genders = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'];
+                  $genders = ['male' => 'male', 'female' => 'female', 'other' => 'other'];
                   foreach ($genders as $key => $label) {
                       $checked = (isset($formData['gender']) && $formData['gender'] === $key) ? 'checked' : '';
                       echo "<div class='form-check form-check-inline'>
-                              <input class='form-check-input' type='radio' name='gender' value='$key' $checked>
-                              <label class='form-check-label'>$label</label>
+                              <input class='form-control' type='radio' name='gender' value='$key' $checked>
+                              <label class='form-check-label ml-1'>$label</label>
                             </div>";
                   }
                   ?>
                 </div>
+                </div>
 
-                <div class="form-group col-md-6">
-                <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
+                 <div class="form-group col-md-6">
+                <label>Hobbies<span class="text-danger">*</span> <small class="text-muted">(Select at least one)</small></label><br>
+                <div class="bg-light form-control rounded shadow-sm" style="height:max-content;">
                 <?php
                 $hobbies = ["Travelling", "Watch Movies", "Reading", "Cooking", "Photography", "Gaming", "Music"];
                 $selectedHobbies = $formData['hobby'] ?? [];
@@ -142,11 +145,12 @@ include('../../sidebar.php');
                     $checked = (is_array($selectedHobbies) && in_array($hobby, $selectedHobbies)) ? 'checked' : '';
                     $label = $hobby === "Watch Movies" ? "Watching Movies" : $hobby;
                     echo "<div class='form-check form-check-inline'>
-                            <input class='form-check-input' type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
-                            <label class='form-check-label'>" . htmlspecialchars($label) . "</label>
+                            <input type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
+                            <label class='form-check-label ml-1'>" . htmlspecialchars($label) . "</label>
                           </div>";
                 }
                 ?>
+                </div>
               </div>
               </div>
               <div class="row">
@@ -203,7 +207,7 @@ include('../../sidebar.php');
 unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION['message']);
 ?>
 
-<?php include('../../footer.php'); ?>
+<?php include('../footer.php'); ?>
 
 
 <script src="../../plugins/jquery/jquery.min.js"></script>
@@ -322,9 +326,10 @@ unset($_SESSION['formData'], $_SESSION['errors'], $_SESSION['status'], $_SESSION
           error.addClass('invalid-feedback');
           element.closest('.form-group').append(error);
         },
-        highlight: function(element) {
-          $(element).addClass('is-invalid');
-        },
+        highlight: function (element) {
+        $(element).addClass('is-invalid');
+        $(element).closest('.form-group').find('.bg-light').addClass('is-invalid');
+      },
         unhighlight: function(element) {
           $(element).removeClass('is-invalid').addClass('is-valid');
         }

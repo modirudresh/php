@@ -1,27 +1,5 @@
 <?php
-session_start();
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once __DIR__ . '/../../Controllers/UserController.php';
-use Controllers\UserController;
-
-$controller = new UserController();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id']) && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-    header('Content-Type: application/json');
-    $deleted = $controller->deleteUser($_POST['delete_id']);
-    echo json_encode([
-        'status' => $deleted ? 'success' : 'error',
-        'message' => $deleted ? 'User deleted successfully' : 'Failed to delete user'
-    ]);
-    exit();
-}
-
-$users = $controller->index();
-
+include_once("indexaction.php");
 include_once("../header.php");
 include_once("../sidebar.php");
 ?>
@@ -44,7 +22,7 @@ include_once("../sidebar.php");
             <div class="card-header">
                 <div class="row">
                     <h2 class="col-md-9 m-auto pl-4"></h2>
-                    <a href="create.php" class="btn btn-primary px-4 col-md-3 m-auto">Add New User</a>
+                    <a href="create.php" class="btn btn-primary px-4">Add New User</a>
                 </div>
             </div>
             <div class="card-body">
@@ -105,7 +83,7 @@ include_once("../sidebar.php");
     </div>
 
     <div class="modal fade" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white" id="userModalLabel"><i class="fas fa-user mr-2"></i> User Details</h5>
@@ -113,9 +91,6 @@ include_once("../sidebar.php");
                 </div>
                 <div class="modal-body p-3" id="userDetailContent">
                     <div class="text-center text-muted">Loading...</div>
-                </div>
-                <div class="modal-footer justify-content-between bg-light">
-                    <small class="text-muted">Last Updated: <?= !empty($User['updated_at']) ? date('d M Y, h:i A', strtotime($User['updated_at'])) : 'N/A' ?></small>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@ if (!isset($_GET['id'])) {
 }
 
 $id = (int)$_GET['id'];
-$stmt = $con->prepare("SELECT * FROM User WHERE id = ?");
+$stmt = $con->prepare("SELECT * FROM User_data WHERE id = ?");
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -21,8 +21,8 @@ if (!$user) {
     exit;
 }
 ?>
-<?php include('../../header.php'); ?>
-<?php include('../../sidebar.php'); ?>
+<?php include('../header.php'); ?>
+<?php include('../sidebar.php'); ?>
       <div class="container-fluid mb-2">
         <div class="row">
           <div class="col-sm-6"><h1>User Details</h1></div>
@@ -42,7 +42,7 @@ if (!$user) {
           <div class="card-body">
             <div class="row">
             <div class="col-md-3 text-center justify-content-center m-auto">
-            <img src="./<?= (!empty($user['image_path']) && file_exists($user['image_path']) ? $user['image_path'] : '../../assets/img/profile.png') ?>" alt="Profile" class="img-thumbnail mt-1 shadow-lg" style="height: 80px; width:auto;">
+            <img src="./<?= (!empty($user['image_path']) && file_exists($user['image_path']) ? $user['image_path'] : '../../assets/img/default.png') ?>" alt="Profile" class="img-thumbnail mt-1 shadow-lg" style="height: 80px; width:auto;">
             </div>
               <div class="col-md-9">
                 <table class="table table-sm">
@@ -106,5 +106,5 @@ if (!$user) {
     </section>
   </div>
 
-  <?php include('../../footer.php'); ?>
+  <?php include('../footer.php'); ?>
 

@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="dashboard.php" class="brand-link">
+    <a href="../src/dashboard.php" class="brand-link">
       <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
@@ -49,7 +49,7 @@ error_reporting(E_ALL);
 
     <!-- Dashboard -->
     <li class="nav-item">
-        <a href="dashboard.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : '' ?>">
+        <a href="../src/dashboard.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : '' ?>">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
                 Dashboard
@@ -68,14 +68,14 @@ error_reporting(E_ALL);
             </p>
         </a>
         <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="../student/index.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>">
+            <li class="nav-item" style="margin-left:20px;">
+                <a href="../student/index.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>" style="width:220px;">
                     <i class="fas fa-list-alt nav-icon"></i>
                     <p>Manage Students</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="../student/create.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'create.php' && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>">
+            <li class="nav-item" style="margin-left:20px;">
+                <a href="../student/create.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'create.php' && strpos($_SERVER['SCRIPT_NAME'], '/student/')) !== false ? 'active' : '' ?>"style="width:220px;">
                     <i class="fas fa-user-plus nav-icon"></i>
                     <p>Add New Student</p>
                 </a>
@@ -93,14 +93,14 @@ error_reporting(E_ALL);
             </p>
         </a>
         <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="../user/index.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>">
+            <li class="nav-item" style="margin-left:20px;">
+                <a href="../user/index.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>" style="width:220px;">
                     <i class="fas fa-list-alt nav-icon"></i>
                     <p>Manage Users</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="../user/create.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'create.php' && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>">
+            <li class="nav-item" style="margin-left:20px;">
+                <a href="../user/create.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) === 'create.php' && strpos($_SERVER['SCRIPT_NAME'], '/user/')) !== false ? 'active' : '' ?>" style="width:220px;">
                     <i class="fas fa-user-plus nav-icon"></i>
                     <p>Add New User</p>
                 </a>

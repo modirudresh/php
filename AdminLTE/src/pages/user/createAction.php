@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hobbyStr = implode(', ', $hobbies);
 
         $stmt = $con->prepare("
-            INSERT INTO User 
+            INSERT INTO User_data 
             (first_name, last_name, email, password, image_path, address, DOB, phone_no, gender, hobby, country, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
         ");

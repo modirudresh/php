@@ -15,7 +15,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $id = (int) $_GET['id'];
 
-$stmt = $con->prepare("SELECT * FROM User WHERE id = ?");
+$stmt = $con->prepare("SELECT * FROM User_data WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -48,8 +48,8 @@ $formData = [
 ];
 ?>
 
-<?php include('../../header.php'); ?>
-<?php include('../../sidebar.php'); ?>
+<?php include('../header.php'); ?>
+<?php include('../sidebar.php'); ?>
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6"><h1 class="m-0">Update User</h1></div>
@@ -150,30 +150,30 @@ $formData = [
               <div class="row">
                   <div class="form-group col-md-6">
                     <label class="d-block">Gender <span class="text-danger">*</span></label>
-                    <div class="bg-light p-3 rounded shadow-sm">
-                    <?php
+                      <div class="bg-light form-control rounded shadow-sm" style="height:max-content;">
+                        <?php
                         $genders = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other'];
                         foreach ($genders as $key => $label) {
                             $checked = ($formData['gender'] === $key) ? 'checked' : '';
-                            echo "<div class='form-check form-check-inline mr-3'>
-                                    <input class='form-check-input' type='radio' name='gender' id='gender_$key' value='$key' $checked>
-                                    <label class='form-check-label' for='gender_$key'>$label</label>
+                            echo "<div class='form-check form-check-inline'>
+                                    <input class='form-control' type='radio' name='gender' id='gender_$key' value='$key' $checked>
+                                    <label class='form-check-label ml-1' for='gender_$key'>$label</label>
                                   </div>";
                         }
                         ?>
-                    </div>
-                </div>
+                      </div>
+                  </div>
 
                 <!-- Hobbies -->
                 <div class="form-group col-md-6">
-                  <label>Hobbies <small class="text-muted">(Select at least one)</small></label><br>
-                  <div class="bg-light p-3 rounded shadow-sm">
+                  <label>Hobbies<span class="text-danger">*</span> <small class="text-muted">(Select at least one)</small></label><br>
+                  <div class="bg-light form-control rounded shadow-sm" style="height:max-content;">
                   <?php
                       foreach ($allHobbies as $hobby) {
                           $checked = in_array($hobby, $selectedHobbies) ? 'checked' : '';
                           echo "<div class='form-check form-check-inline'>
-                                  <input class='form-check-input' type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
-                                  <label class='form-check-label'>" . htmlspecialchars($hobby) . "</label>
+                                  <input type='checkbox' name='hobby[]' value='" . htmlspecialchars($hobby) . "' $checked>
+                                  <label class='form-check-label ml-1'>" . htmlspecialchars($hobby) . "</label>
                                 </div>";
                       }
                     ?>
@@ -219,7 +219,7 @@ $formData = [
     </section>
   </div>
 
-  <?php include('../../footer.php'); ?>
+  <?php include('../footer.php'); ?>
 
 </div>
 
@@ -332,8 +332,9 @@ $formData = [
             }
           },
           highlight: function (element) {
-            $(element).removeClass('is-valid').addClass('is-invalid');
-          },
+        $(element).addClass('is-invalid');
+        $(element).closest('.form-group').find('.bg-light').addClass('is-invalid');
+      },
           unhighlight: function (element) {
             $(element).removeClass('is-invalid').addClass('is-valid');
           }

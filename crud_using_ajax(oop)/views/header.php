@@ -97,7 +97,7 @@
         </a>
       </li>
 
-      <!-- Profile Dropdown -->
+      <!-- Profile Dropdown
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
           <img src="../../uploads/profile.png" alt="Profile" style="width:25px; height:auto; border-radius:50%;">
@@ -114,7 +114,7 @@
             <i class="fas fa-sign-out-alt mr-2"></i> Logout
           </a>
         </div>
-      </li>
+      </li> -->
     </ul>
   </nav>
   

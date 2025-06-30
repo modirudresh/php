@@ -4,12 +4,12 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once('../../../config/config.php');
 
-$sql = "SELECT * FROM User ORDER BY created_at ASC";
+$sql = "SELECT * FROM User_data ORDER BY id DESC";
 $result = mysqli_query($con, $sql);
 ?>
 
-<?php include('../../header.php'); ?>
-<?php include('../../sidebar.php'); ?>
+<?php include('../header.php'); ?>
+<?php include('../sidebar.php'); ?>
 
 <!-- <div class="container-fluid"> -->
   <div class="row mb-2">
@@ -45,7 +45,6 @@ $result = mysqli_query($con, $sql);
               <th>Full Name</th>
               <th>Email</th>
               <th>Image</th>
-              <th>Address</th>
               <th>DOB</th>
               <th>Phone</th>
               <th>Gender</th>
@@ -65,18 +64,13 @@ $result = mysqli_query($con, $sql);
                   </td>
                   <td><?= !empty($res['email']) ? htmlspecialchars($res['email']) : 'N/A' ?></td>
                   <td>
-                    <?php if (!empty($res['image_path']) && file_exists($res['image_path'])): ?>
-                      <img src="<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:60px; height:auto;">
+                    <?php if (!empty($res['image_path']) && file_exists(__DIR__ . '/../user/' . $res['image_path'])): ?>
+                      <img src="../user/<?= htmlspecialchars($res['image_path']) ?>" alt="Profile" style="width:60px; height:auto;">
                     <?php else: ?>
                       <img src="../../assets/img/default.png" alt="Default Profile" style="width:60px; height:auto; object-fit:contain;">
                     <?php endif; ?>
                   </td>
-                  <td>
-                    <?= !empty($res['address']) ? nl2br(htmlspecialchars($res['address'])) : 'N/A' ?><br>
-                    <?php if (!empty($res['country'])): ?>
-                      <small class="badge badge-dark"><?= strtoupper($res['country']) ?></small>
-                    <?php endif; ?>
-                  </td>
+
                   <td style="min-width: max-content;"><?= !empty($res['DOB']) ? date('d-m-Y', strtotime($res['DOB'])) : 'N/A' ?></td>
                   <td class="text-center">
                     <?php
@@ -111,13 +105,13 @@ $result = mysqli_query($con, $sql);
                     ?>
                   </td>
                   <td class="text-center">
-                    <a href="view.php?id=<?= urlencode($res['id']) ?>" class="text-info me-2" title="View User" aria-label="View User" style="font-size:1.2rem;">
+                    <a href="view.php?id=<?= urlencode($res['id']) ?>" class="btn btn-info btn-xs me-3" title="View User" aria-label="View User" style="font-size:1.2rem;">
                       <i class="fa fa-eye"></i>
                     </a>
-                    <a href="edit.php?id=<?= urlencode($res['id']) ?>" class="text-warning me-2" title="Edit User" aria-label="Edit User" style="font-size:1.2rem;">
+                    <a href="edit.php?id=<?= urlencode($res['id']) ?>" class="btn btn-warning btn-xs me-3" title="Edit User" aria-label="Edit User" style="font-size:1.2rem;">
                       <i class="fa fa-edit"></i>
                     </a>
-                    <a href="#" class="text-danger me-2" title="Delete User" aria-label="Delete User" style="font-size:1.2rem;" data-bs-toggle="modal" data-bs-target="#deleteModal<?= htmlspecialchars($res['id']) ?>">
+                    <a href="#" class="btn btn-danger btn-xs me-3" title="Delete User" aria-label="Delete User" style="font-size:1.2rem;" data-bs-toggle="modal" data-bs-target="#deleteModal<?= htmlspecialchars($res['id']) ?>">
                       <i class="fa fa-trash"></i>
                     </a>
 
@@ -165,29 +159,29 @@ $result = mysqli_query($con, $sql);
 </div>
 
 <!-- DataTables  & Plugins -->
-<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="../../plugins/jszip/jszip.min.js"></script>
-<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
-<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../plugins/jszip/jszip.min.js"></script>
+<script src="../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
+<script src="../plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI -->
-<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="../plugins/jquery-ui/jquery-ui.min.js"></script>
 <script>$.widget.bridge('uibutton', $.ui.button);</script>
 <!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Toastr -->
-<script src="../../plugins/toastr/toastr.min.js"></script>
+<script src="../plugins/toastr/toastr.min.js"></script>
 <!-- AdminLTE -->
-<script src="../../dist/js/adminlte.js"></script>
+<script src="../dist/js/adminlte.js"></script>
 
 <script>
     $(function () {
@@ -212,4 +206,4 @@ $result = mysqli_query($con, $sql);
         modal.show();
       }
     </script>
-<?php include('../../footer.php'); ?>
+<?php include('../footer.php'); ?>

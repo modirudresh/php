@@ -65,7 +65,7 @@
       responsive: true,
       lengthChange: true,
       autoWidth: false,
-      ordering: true,
+      ordering: false,
       info: true,
       paging: true,
       searching: true,

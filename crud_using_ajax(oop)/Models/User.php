@@ -131,4 +131,12 @@ class User {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
+    public function countAll() {
+        $sql = "SELECT COUNT(*) as total FROM `User`";
+        $stmt = $this->connection->query($sql);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+    }
+    
 }

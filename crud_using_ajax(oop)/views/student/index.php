@@ -1,30 +1,6 @@
 <?php
-session_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once __DIR__ . '/../../Controllers/StudentController.php';
-use Controllers\StudentController;
-
-$controller = new StudentController();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id']) && isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-    header('Content-Type: application/json');
-    $deleteId = $_POST['delete_id'];
-    $deleted = $controller->deleteStudent($deleteId);
-
-    if ($deleted) {
-        echo json_encode(['status' => 'success', 'message' => 'User deleted successfully']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to delete user']);
-    }
-    exit();
-}
-
-$students = $controller->index();
-
+include_once("indexaction.php");
 include_once("../header.php");
 include_once("../sidebar.php");
 ?>
@@ -49,7 +25,7 @@ include_once("../sidebar.php");
             <div class="card-header">
                 <div class="row">
                     <h2 class="col-md-9 m-auto pl-4"></h2>
-                    <a href="create.php" class="btn btn-primary px-4 col-md-3 m-auto">Add New Student</a>
+                    <a href="create.php" class="btn btn-primary px-4">Add New Student</a>
                 </div>
             </div>
             <div class="card-body">
@@ -75,7 +51,7 @@ include_once("../sidebar.php");
                                     <td><?= htmlspecialchars($student['email'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($student['phone_no'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($student['address'] ?? '') ?></td>
-                                    <td>
+                                    <td class="text-center">
                                         <a href="view.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>
                                         <a href="edit.php?id=<?= $student['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
                                         <button class="btn btn-sm btn-danger ajaxDeleteBtn" data-id="<?= $student['id'] ?>">

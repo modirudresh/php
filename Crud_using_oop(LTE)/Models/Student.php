@@ -45,7 +45,7 @@ class Student {
     }
 
     public function read() {
-        $sql = "SELECT * FROM student";
+        $sql = "SELECT * FROM student ORDER BY id DESC";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -77,13 +77,9 @@ class Student {
         return $stmt->fetchColumn() > 0;
     }
     
-    // public function markAttendance($student_id, $attendance_date, $status) {
-    //     $sql = "INSERT INTO attendance (student_id, attendance_date, status)
-    //             VALUES (:student_id, :attendance_date, :status)";
-    //     $stmt = $this->connection->prepare($sql);
-    //     $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_INT);
-    //     $stmt->bindParam(':attendance_date', $attendance_date);
-    //     $stmt->bindParam(':status', $status);
-    //     return $stmt->execute();
-    // }
+    public function countAll() {
+        $sql = "SELECT COUNT(*) as total FROM `student`";
+        $stmt = $this->connection->query($sql);
+        return $stmt->fetch(\PDO::FETCH_ASSOC)['total'] ?? 0;
+    }
 }

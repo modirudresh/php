@@ -16,6 +16,10 @@ class UserController {
         return $this->user->read();
     }
 
+    public function totalCount() {
+        return $this->user->countAll();
+    }
+    
     public function checkEmailExists($email, $excludeId = null) {
         return $this->user->emailExists($email, $excludeId);
     }

@@ -76,6 +76,13 @@ class Student {
         $stmt->execute();
         return $stmt->fetchColumn() > 0;
     }
+
+
+    public function countAll() {
+        $sql = "SELECT COUNT(*) as total FROM `student`";
+        $stmt = $this->connection->query($sql);
+        return $stmt->fetch(\PDO::FETCH_ASSOC)['total'] ?? 0;
+    }
     
     // public function markAttendance($student_id, $attendance_date, $status) {
     //     $sql = "INSERT INTO attendance (student_id, attendance_date, status)

@@ -16,6 +16,10 @@ class StudentController {
         return $this->student->read();
     }
 
+    public function totalCount() {
+        return $this->student->countAll();
+    }
+
     public function addStudent($first_name, $last_name, $email, $contactNo, $address) {
         return $this->student->create($first_name, $last_name, $email, $contactNo, $address); 
     }
